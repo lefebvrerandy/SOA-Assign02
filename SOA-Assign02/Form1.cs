@@ -47,25 +47,41 @@ namespace SOA_Assign02
             }
             /// END DEBUGGING PURPOSES
 
-            // Make a call to parse the information from the selected web service method
-            //  The returned value will contain an array of strings giving the:
-            //   URL, ACTION, REQUEST, RESPONSE
+            tb_param1.Enabled = false;
+            tb_param2.Enabled = false;
 
         }
 
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            // Determine how many parameters we are expecting
+            switch (file.DetermineParamAmount(cb_WebServiceList.Text, file.configList))
+            {
+                case 1:
+                    tb_param1.Enabled = true;
+                    tb_param2.Enabled = false;
+                    break;
+                case 2:
+                    tb_param1.Enabled = true;
+                    tb_param2.Enabled = true;
+                    break;
+            }
         }
 
         private void btn_Submit_Click(object sender, EventArgs e)
         {
-            string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, tb_param1.Text, tb_param2.Text);
-            //string expectedResults = file.ParseExpectedResults(cb_WebServiceList.Text, file.configList);
-            string actualResponse = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
+            // Make a call to parse the information from the selected web service method
+            //  The returned value will contain an array of strings giving the:
+            //   URL, ACTION, REQUEST, RESPONSE
+            string[] paramArray = { tb_param1.Text, tb_param2.Text };
+            string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, paramArray);
+            List<string> response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
 
-            txt_output.Text = actualResponse;
-
+            txt_output.Text = "";
+            foreach (string line in response)
+            {
+                txt_output.Text += line;
+            }
         }
     }
 }

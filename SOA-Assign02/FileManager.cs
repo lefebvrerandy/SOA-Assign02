@@ -137,7 +137,7 @@ namespace SOA_Assign02
             return webServicePackage;
         }
 
-        public string[] ParseWebService(string selectedServiceMethod, List<Tuple<string,string,string>> webPackage, string param1 = "", string param2 = "")
+        public string[] ParseWebService(string selectedServiceMethod, List<Tuple<string,string,string>> webPackage, string[] paramArray)
         {
             string[] parsedService = { "","","" };
 
@@ -155,7 +155,7 @@ namespace SOA_Assign02
                 {
                     parsedService[0] = FindURL(items.Item2);
                     parsedService[1] = FindAction(items.Item2);
-                    parsedService[2] = FindRequest(items.Item2, param1, param2);
+                    parsedService[2] = FindRequest(items.Item2, paramArray);
                     break;
                 }
             }
@@ -217,7 +217,7 @@ namespace SOA_Assign02
             return action;
         }
 
-        private string FindRequest(string headerRequest, string param1, string param2)
+        private string FindRequest(string headerRequest, string[] paramArray)
         {
             string request = string.Empty;
             bool soapBody = false;
@@ -227,7 +227,6 @@ namespace SOA_Assign02
             for(int i = 0; i < headerRequestByLine.Count() ; i++)
             {
                 int o = headerRequestByLine.Count();
-                //headerRequestByLine[i] = Regex.Replace(headerRequestByLine[i], @"\ ", "");
                 if (headerRequestByLine[i].Contains("<soap:Envelope"))
                 {
                     soapBody = true;
@@ -238,24 +237,30 @@ namespace SOA_Assign02
                     request += headerRequestByLine[i];
                 }
 
-                if (headerRequestByLine[i].Contains("<intA>"))
-                {
-                    request += "<intA>" + param1 + "</intA>";
-                }
-                else if (headerRequestByLine[i].Contains("<intB>"))
-                {
-                    request += "<intB>" + param2 + "</intB>";
-                }
-                else if (soapBody)
+                if (soapBody)
                 {
                     request += headerRequestByLine[i];
                 }
             }
 
+            // convert the XML string to Xml NodeList
+            XmlDocument convertedToXml = new XmlDocument();
+            convertedToXml.LoadXml(request);
+            XmlNodeList node = convertedToXml.ChildNodes;
+
+            // Start the node in body
+            var bodyNode = node.Item(0).FirstChild.FirstChild;
+            int j = 0;
+            foreach (XmlNode child in bodyNode)
+            {
+                child.InnerText = paramArray[j++];
+            }
+            request = convertedToXml.OuterXml;
+
             return request;
         }
 
-        public string ParseExpectedResults(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
+        public int DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
         {
             XmlDocument expectedResults = new XmlDocument();
             string expectedString = string.Empty;
@@ -266,7 +271,7 @@ namespace SOA_Assign02
 
                 if (string.Compare(selectedServiceMethod, WebPackageExpectedResult) == 0)
                 {
-                    string[] expectedResultsString = items.Item3.Split('\n');
+                    string[] expectedResultsString = items.Item2.Split('\n');
                     foreach (string line in expectedResultsString)
                     {
                         // We've found the format that we are expecting for the results.
@@ -285,19 +290,49 @@ namespace SOA_Assign02
             }
             expectedString = Regex.Replace(expectedString, @"\t|\n|\r", ""); ;
             expectedResults.LoadXml(expectedString);
-            //XmlNodeList nodes = expectedResults.ChildNodes;
-            //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
             XmlNodeList node = expectedResults.ChildNodes;
-            var test = node.Item(1);
+            var rootNode = node.Item(1);
 
-            // This should give me the answer for calculator
-            //  This is soap:Envelope/soap:Body/AddResponse/AddResult
-            var test2 = test.FirstChild.FirstChild.FirstChild.FirstChild;
+            //  This is soap:Envelope/soap:Body/
+            var resultNode = rootNode.FirstChild.FirstChild;
+            int amountOfParamsNeeded = resultNode.ChildNodes.Count;
             
             
 
 
-            return expectedString;
+            return amountOfParamsNeeded;
         }
+
+        //public int DetermineParam(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
+        //{
+        //    int amoutOfParams = 0;
+        //    bool xmlSection = false;
+
+        //    foreach (var items in webPackage)
+        //    {
+        //        string WebPackageExpectedResult = items.Item1;
+
+        //        if (string.Compare(selectedServiceMethod, WebPackageExpectedResult) == 0)
+        //        {
+        //            string[] expectedResultsString = items.Item3.Split('\n');
+        //            foreach (string line in expectedResultsString)
+        //            {
+        //                // We've found the format that we are expecting for the results.
+        //                // Lets store that
+        //                if (line.Contains("<?xml version="))
+        //                {
+        //                    xmlSection = true;
+        //                }
+        //                if (xmlSection)
+        //                {
+        //                    expectedString += line;
+        //                }
+        //            }
+        //            break;
+        //        }
+        //    }
+
+        //    return amoutOfParams;
+        //}
     }
 }

@@ -14,7 +14,7 @@ namespace SOA_Assign02
     {
         
         
-        public static string CallWebService(string url, string action, string soapEnvelope)
+        public static List<string> CallWebService(string url, string action, string soapEnvelope)
         {
             /// These are hardcoded values and will need to be changed
             //var _url = "http://www.dneonline.com/calculator.asmx";
@@ -35,7 +35,9 @@ namespace SOA_Assign02
 
             // get the response from the completed web request.
             string soapResult = string.Empty;
+            List<string> resultsList = new List<string>();
             bool unableToConnect = false;
+
             try
             {
                 using (WebResponse webResponse = webRequest.EndGetResponse(asyncResult))
@@ -61,17 +63,55 @@ namespace SOA_Assign02
                 //XmlNodeList nodes = expectedResults.ChildNodes;
                 //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
                 XmlNodeList node = results.ChildNodes;
-                var test = node.Item(1);
+                // Start the node in body
+                var bodyNode = node.Item(1).FirstChild;
 
-                // This should give me the answer for calculator
-                //  This is soap:Envelope/soap:Body/AddResponse/AddResult
-                var test2 = test.FirstChild.FirstChild.FirstChild.FirstChild;
-                soapResult = test2.Value.ToString();
+                
+
+                // Find the lowest node
+                bool lowestNodeBool = false;
+                var lowestNode = bodyNode;
+                var lowestNodeTest = bodyNode;
+                int answerNodeCount = 0;
+                List<XmlNode> listOfNodes = new List<XmlNode>();
+                while(!lowestNodeBool)
+                {
+                    lowestNodeTest = lowestNodeTest.FirstChild;
+                    if (lowestNodeTest != null)
+                    {
+                        var testing = lowestNodeTest.ChildNodes;
+                        if (testing.Count > 1)
+                        {
+                            //Has multiple children. Need to iterate through them all
+                            foreach (XmlNode child in lowestNodeTest.ChildNodes)
+                            {
+                                string whoAmI = child.InnerText.ToString();
+                                resultsList.Add(whoAmI);
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            lowestNode = lowestNodeTest;
+                        }
+                    }
+                    else
+                    {
+                        lowestNodeBool = true;
+                    }
+                }
+                try
+                {
+                    resultsList.Add(lowestNode.Value.ToString());
+                }
+                catch (Exception e)
+                { }
+
                 ///END DEBUGGING
             }
 
 
-            return soapResult;
+            return resultsList;
         }
 
         private static HttpWebRequest CreateWebRequest(string url, string action)
