@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using EventLogger;
 
 namespace SOA_Assign02
 {
@@ -20,8 +21,12 @@ namespace SOA_Assign02
             LoadConfigurationFile(fileName);
         }
 
+
+
+
         public List<Tuple<string, string, string>> LoadConfigurationFile(string fileName)
         {
+
             // Check if configuration file exist
             try
             {
@@ -30,6 +35,7 @@ namespace SOA_Assign02
             catch (Exception error)
             {
                 // File does not exist. Return empty sorted list
+                Logger.RecordError(error.Message);
                 return new List<Tuple<string, string, string>>();
             }
 
@@ -43,7 +49,7 @@ namespace SOA_Assign02
             // Open up the file file and store the web services into the List<tuple>
             using (StreamReader file = new StreamReader(fileName))
             {
-                string line;
+                string line = "";
                 int section = 0;
                 int holdSection = 0;
                 while ((line = file.ReadLine()) != null)
