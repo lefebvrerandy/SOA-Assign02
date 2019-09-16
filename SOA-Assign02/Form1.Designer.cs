@@ -35,7 +35,7 @@
             this.txt_output = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_Submit = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -101,14 +101,15 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Parameter 2";
             // 
-            // button1
+            // btn_Submit
             // 
-            this.button1.Location = new System.Drawing.Point(562, 249);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(172, 62);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Submit";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_Submit.Location = new System.Drawing.Point(562, 249);
+            this.btn_Submit.Name = "btn_Submit";
+            this.btn_Submit.Size = new System.Drawing.Size(172, 62);
+            this.btn_Submit.TabIndex = 7;
+            this.btn_Submit.Text = "Submit";
+            this.btn_Submit.UseVisualStyleBackColor = true;
+            this.btn_Submit.Click += new System.EventHandler(this.btn_Submit_Click);
             // 
             // button2
             // 
@@ -125,7 +126,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1493, 1006);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_Submit);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txt_output);
@@ -149,7 +150,7 @@
         private System.Windows.Forms.TextBox txt_output;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_Submit;
         private System.Windows.Forms.Button button2;
     }
 }

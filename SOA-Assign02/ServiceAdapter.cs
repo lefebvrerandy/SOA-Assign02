@@ -41,6 +41,22 @@ namespace SOA_Assign02
                     soapResult = rd.ReadToEnd();
                 }
             }
+
+            //DEBUGGING
+            XmlDocument results = new XmlDocument();
+            results.LoadXml(soapResult);
+            //XmlNodeList nodes = expectedResults.ChildNodes;
+            //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
+            XmlNodeList node = results.ChildNodes;
+            var test = node.Item(1);
+
+            // This should give me the answer for calculator
+            //  This is soap:Envelope/soap:Body/AddResponse/AddResult
+            var test2 = test.FirstChild.FirstChild.FirstChild.FirstChild;
+            soapResult = test2.Value.ToString();
+            //END DEBUGGING
+
+
             return soapResult;
         }
 

@@ -288,6 +288,13 @@ namespace SOA_Assign02
             //XmlNodeList nodes = expectedResults.ChildNodes;
             //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
             XmlNodeList node = expectedResults.ChildNodes;
+            var test = node.Item(1);
+
+            // This should give me the answer for calculator
+            //  This is soap:Envelope/soap:Body/AddResponse/AddResult
+            var test2 = test.FirstChild.FirstChild.FirstChild.FirstChild;
+            
+            
 
 
             return expectedString;

@@ -55,10 +55,17 @@ namespace SOA_Assign02
 
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void btn_Submit_Click(object sender, EventArgs e)
+        {
             string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, tb_param1.Text, tb_param2.Text);
             string expectedResults = file.ParseExpectedResults(cb_WebServiceList.Text, file.configList);
             string actualResponse = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
-            //txt_output.Text = 
+
+            txt_output.Text = actualResponse;
+
         }
     }
 }
