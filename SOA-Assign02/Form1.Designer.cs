@@ -36,7 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_Submit = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_Clear = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cb_WebServiceList
@@ -111,21 +111,22 @@
             this.btn_Submit.UseVisualStyleBackColor = true;
             this.btn_Submit.Click += new System.EventHandler(this.btn_Submit_Click);
             // 
-            // button2
+            // btn_Clear
             // 
-            this.button2.Location = new System.Drawing.Point(754, 249);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(172, 62);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Clear";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_Clear.Location = new System.Drawing.Point(754, 249);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(172, 62);
+            this.btn_Clear.TabIndex = 8;
+            this.btn_Clear.Text = "Clear";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1493, 1006);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.btn_Submit);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -151,7 +152,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btn_Submit;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_Clear;
     }
 }
 

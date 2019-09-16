@@ -54,17 +54,20 @@ namespace SOA_Assign02
 
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Determine how many parameters we are expecting
-            switch (file.DetermineParamAmount(cb_WebServiceList.Text, file.configList))
+            if (cb_WebServiceList.SelectedIndex != -1)
             {
-                case 1:
-                    tb_param1.Enabled = true;
-                    tb_param2.Enabled = false;
-                    break;
-                case 2:
-                    tb_param1.Enabled = true;
-                    tb_param2.Enabled = true;
-                    break;
+                // Determine how many parameters we are expecting
+                switch (file.DetermineParamAmount(cb_WebServiceList.Text, file.configList))
+                {
+                    case 1:
+                        tb_param1.Enabled = true;
+                        tb_param2.Enabled = false;
+                        break;
+                    case 2:
+                        tb_param1.Enabled = true;
+                        tb_param2.Enabled = true;
+                        break;
+                }
             }
         }
 
@@ -80,7 +83,37 @@ namespace SOA_Assign02
             txt_output.Text = "";
             foreach (string line in response)
             {
-                txt_output.Text += line;
+                txt_output.Text += line + Environment.NewLine;
+            }
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            // Clear the contents of combobox selection, param 1, param 2, textbox
+
+            cb_WebServiceList.SelectedIndex = -1;
+            tb_param1.Text = "";
+            tb_param1.Enabled = false;
+            tb_param2.Text = "";
+            tb_param2.Enabled = false;
+            txt_output.Text = "";
+            cb_WebServiceList.Items.Clear();
+            foreach (var items in file.configList)
+            {
+                cb_WebServiceList.Items.Add(items.Item1);
+            }
+            int i = 0;
+            foreach (var items in file.configList)
+            {
+                txt_output.Text += string.Format("*******************************************" +
+                                   Environment.NewLine +
+                                   "            WEB SERVICE [{0}]" +
+                                    Environment.NewLine +
+                                   "*******************************************" +
+                                   Environment.NewLine, i++);
+                txt_output.Text += items.Item1 + Environment.NewLine + Environment.NewLine +
+                    items.Item2 + Environment.NewLine + Environment.NewLine +
+                    items.Item3 + Environment.NewLine;
             }
         }
     }
