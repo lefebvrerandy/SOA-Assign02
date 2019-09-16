@@ -85,8 +85,8 @@ namespace SOA_Assign02
                             //Has multiple children. Need to iterate through them all
                             foreach (XmlNode child in lowestNodeTest.ChildNodes)
                             {
-                                string whoAmI = child.InnerText.ToString();
-                                resultsList.Add(whoAmI);
+                                string textValueFromNode = child.InnerText.ToString();
+                                resultsList.Add(textValueFromNode);
                             }
                             break;
                         }
