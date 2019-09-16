@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace SOA_Assign02
 {
@@ -33,28 +34,41 @@ namespace SOA_Assign02
             asyncResult.AsyncWaitHandle.WaitOne();
 
             // get the response from the completed web request.
-            string soapResult;
-            using (WebResponse webResponse = webRequest.EndGetResponse(asyncResult))
+            string soapResult = string.Empty;
+            bool unableToConnect = false;
+            try
             {
-                using (StreamReader rd = new StreamReader(webResponse.GetResponseStream()))
+                using (WebResponse webResponse = webRequest.EndGetResponse(asyncResult))
                 {
-                    soapResult = rd.ReadToEnd();
+                    using (StreamReader rd = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        soapResult = rd.ReadToEnd();
+                        unableToConnect = false;
+                    }
                 }
             }
+            catch(Exception e)
+            {
+                soapResult = e.Message.ToString();
+                unableToConnect = true;
+            }
 
-            //DEBUGGING
-            XmlDocument results = new XmlDocument();
-            results.LoadXml(soapResult);
-            //XmlNodeList nodes = expectedResults.ChildNodes;
-            //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
-            XmlNodeList node = results.ChildNodes;
-            var test = node.Item(1);
+            if (!unableToConnect)
+            {
+                ///DEBUGGING
+                XmlDocument results = new XmlDocument();
+                results.LoadXml(soapResult);
+                //XmlNodeList nodes = expectedResults.ChildNodes;
+                //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
+                XmlNodeList node = results.ChildNodes;
+                var test = node.Item(1);
 
-            // This should give me the answer for calculator
-            //  This is soap:Envelope/soap:Body/AddResponse/AddResult
-            var test2 = test.FirstChild.FirstChild.FirstChild.FirstChild;
-            soapResult = test2.Value.ToString();
-            //END DEBUGGING
+                // This should give me the answer for calculator
+                //  This is soap:Envelope/soap:Body/AddResponse/AddResult
+                var test2 = test.FirstChild.FirstChild.FirstChild.FirstChild;
+                soapResult = test2.Value.ToString();
+                ///END DEBUGGING
+            }
 
 
             return soapResult;
