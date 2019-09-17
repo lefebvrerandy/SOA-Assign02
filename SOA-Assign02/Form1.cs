@@ -15,9 +15,8 @@ namespace SOA_Assign02
 {
     public partial class Form1 : Form
     {
+        FileManager file;
         string fileName = "config.txt";
-        FileManager file;                   
-
 
         public Form1()
         {
@@ -41,6 +40,8 @@ namespace SOA_Assign02
             
             //Read the config file, and populate the combobox with the web services
             file = new FileManager(fileName);
+
+            // List all the web services in the combobox
             foreach (var items in file.configList)
             {
                 cb_WebServiceList.Items.Add(items.Item1);
@@ -49,28 +50,13 @@ namespace SOA_Assign02
             #region DEBUGGING
             int i = 0;
             // Display all the information that is stored in the file.configList
-            foreach (var items in file.configList)
-            {
-                txt_output.Text += string.Format("*******************************************" +
-                                   Environment.NewLine +
-                                   "            WEB SERVICE [{0}]" +
-                                    Environment.NewLine +
-                                   "*******************************************" +
-                                   Environment.NewLine, i++);
-                txt_output.Text += items.Item1 + Environment.NewLine + Environment.NewLine +
-                    items.Item2 + Environment.NewLine + Environment.NewLine +
-                    items.Item3 + Environment.NewLine;
-            }
-            # endregion
+            Print_Config_Into_Text_Box();
+
+            tb_param1.Enabled = false;
+            tb_param2.Enabled = false;
+
         }
 
-
-        /*
-        *   METHOD        : cb_WebServiceList_SelectedIndexChanged
-        *   DESCRIPTION   : Adjusts the parameter controls based on the users selected service
-        *   PARAMETERS    : TODO
-        *   RETURNS       : void : Has no return value 
-        */
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cb_WebServiceList.SelectedIndex != -1)
@@ -147,16 +133,10 @@ namespace SOA_Assign02
             }
         }
 
-
-        /*
-        *   METHOD        : btn_Clear_Click
-        *   DESCRIPTION   : Clears the text from the forms controls
-        *   PARAMETERS    : TODO
-        *   RETURNS       : void : Has no return value 
-        */
         private void btn_Clear_Click(object sender, EventArgs e)
         {
             // Clear the contents of combobox selection, param 1, param 2, textbox
+
             cb_WebServiceList.SelectedIndex = -1;
             tb_param1.Text = "";
             tb_param1.Enabled = false;
@@ -168,6 +148,12 @@ namespace SOA_Assign02
             {
                 cb_WebServiceList.Items.Add(items.Item1);
             }
+            Print_Config_Into_Text_Box();
+
+        }
+
+        private void Print_Config_Into_Text_Box()
+        {
             int i = 0;
             foreach (var items in file.configList)
             {

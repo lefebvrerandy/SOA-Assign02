@@ -7,14 +7,16 @@ using System.Xml;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace SOA_Assign02
 {
     public class ServiceAdapter
     {
-        
-        
-        public static List<string> CallWebService(string url, string action, string soapEnvelope)
+
+
+        // Retrieved from https://stackoverflow.com/questions/4791794/client-to-send-soap-request-and-receive-response
+        public static List<Tuple<string, string>> CallWebService(string url, string action, string soapEnvelope)
         {
             /// These are hardcoded values and will need to be changed
             //var _url = "http://www.dneonline.com/calculator.asmx";
@@ -35,7 +37,7 @@ namespace SOA_Assign02
 
             // get the response from the completed web request.
             string soapResult = string.Empty;
-            List<string> resultsList = new List<string>();
+            List<Tuple<string, string>> resultsList = new List<Tuple<string, string>>();
             bool unableToConnect = false;
 
             try
@@ -66,7 +68,7 @@ namespace SOA_Assign02
                 // Start the node in body
                 var bodyNode = node.Item(1).FirstChild;
 
-                
+
 
                 // Find the lowest node
                 bool lowestNodeBool = false;
@@ -85,8 +87,9 @@ namespace SOA_Assign02
                             //Has multiple children. Need to iterate through them all
                             foreach (XmlNode child in lowestNodeTest.ChildNodes)
                             {
-                                string textValueFromNode = child.InnerText.ToString();
-                                resultsList.Add(textValueFromNode);
+                                //string textValueFromNode = child.InnerText.ToString();
+                                Tuple<string,string> temp = Tuple.Create(child.Name.ToString(), child.InnerText.ToString());
+                                resultsList.Add(temp);
                             }
                             break;
                         }
@@ -102,7 +105,8 @@ namespace SOA_Assign02
                 }
                 try
                 {
-                    resultsList.Add(lowestNode.Value.ToString());
+                    Tuple<string, string> temp = Tuple.Create(lowestNode.Name.ToString(), lowestNode.Value.ToString());
+                    resultsList.Add(temp);
                 }
                 catch (Exception e)
                 { }
