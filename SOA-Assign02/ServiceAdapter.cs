@@ -7,13 +7,15 @@ using System.Xml;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace SOA_Assign02
 {
     public class ServiceAdapter
     {
-        
-        
+
+
+        // Retrieved from https://stackoverflow.com/questions/4791794/client-to-send-soap-request-and-receive-response
         public static List<Tuple<string, string>> CallWebService(string url, string action, string soapEnvelope)
         {
             /// These are hardcoded values and will need to be changed
@@ -66,7 +68,7 @@ namespace SOA_Assign02
                 // Start the node in body
                 var bodyNode = node.Item(1).FirstChild;
 
-                
+
 
                 // Find the lowest node
                 bool lowestNodeBool = false;

@@ -306,37 +306,5 @@ namespace SOA_Assign02
 
             return amountOfParamsNeeded;
         }
-
-        //public int DetermineParam(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
-        //{
-        //    int amoutOfParams = 0;
-        //    bool xmlSection = false;
-
-        //    foreach (var items in webPackage)
-        //    {
-        //        string WebPackageExpectedResult = items.Item1;
-
-        //        if (string.Compare(selectedServiceMethod, WebPackageExpectedResult) == 0)
-        //        {
-        //            string[] expectedResultsString = items.Item3.Split('\n');
-        //            foreach (string line in expectedResultsString)
-        //            {
-        //                // We've found the format that we are expecting for the results.
-        //                // Lets store that
-        //                if (line.Contains("<?xml version="))
-        //                {
-        //                    xmlSection = true;
-        //                }
-        //                if (xmlSection)
-        //                {
-        //                    expectedString += line;
-        //                }
-        //            }
-        //            break;
-        //        }
-        //    }
-
-        //    return amoutOfParams;
-        //}
     }
 }
