@@ -67,6 +67,12 @@ namespace SOA_Assign02
         }
 
 
+        /*
+        *   METHOD        : cb_WebServiceList_SelectedIndexChanged
+        *   DESCRIPTION   : Adjusts the parameter controls based on the users selected service
+        *   PARAMETERS    : TODO
+        *   RETURNS       : void : Has no return value 
+        */
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cb_WebServiceList.SelectedIndex != -1)
@@ -86,6 +92,12 @@ namespace SOA_Assign02
             }
         }
 
+        /*
+        *   METHOD        : btn_Submit_Click
+        *   DESCRIPTION   : Sends the users selected service, and parameters to the service provider
+        *   PARAMETERS    : TODO
+        *   RETURNS       : void : Has no return value 
+        */
         private void btn_Submit_Click(object sender, EventArgs e)
         {
             // Make a call to parse the information from the selected web service method
@@ -102,10 +114,16 @@ namespace SOA_Assign02
             }
         }
 
+
+        /*
+        *   METHOD        : btn_Clear_Click
+        *   DESCRIPTION   : Clears the text from the forms controls
+        *   PARAMETERS    : TODO
+        *   RETURNS       : void : Has no return value 
+        */
         private void btn_Clear_Click(object sender, EventArgs e)
         {
             // Clear the contents of combobox selection, param 1, param 2, textbox
-
             cb_WebServiceList.SelectedIndex = -1;
             tb_param1.Text = "";
             tb_param1.Enabled = false;

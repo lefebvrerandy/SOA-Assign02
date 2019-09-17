@@ -22,8 +22,6 @@ namespace SOA_Assign02
         }
 
 
-
-
         public List<Tuple<string, string, string>> LoadConfigurationFile(string fileName)
         {
 
@@ -39,6 +37,7 @@ namespace SOA_Assign02
                 return new List<Tuple<string, string, string>>();
             }
 
+
             // Temp list<tuple> to hold our web services
             List<Tuple<string, string, string>> webServicePackage = new List<Tuple<string, string, string>>();
 
@@ -46,7 +45,7 @@ namespace SOA_Assign02
             string request = "";
             string response = "";
 
-            // Open up the file file and store the web services into the List<tuple>
+            // Open up the file and store the web services into the List<tuple>
             using (StreamReader file = new StreamReader(fileName))
             {
                 string line = "";
