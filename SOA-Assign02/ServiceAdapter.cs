@@ -134,8 +134,6 @@ namespace SOA_Assign02
             soapEnvelopeDocument.LoadXml(soapEnvelope);
 
             //soapEnvelopeDocument.LoadXml(@"<soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""><soap:Body ><Add xmlns = ""http://tempuri.org/""> <intA>1</intA><intB>2</intB></Add></soap:Body></soap:Envelope>");
-
-
             return soapEnvelopeDocument;
         }
 
