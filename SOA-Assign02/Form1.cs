@@ -14,23 +14,37 @@ namespace SOA_Assign02
 {
     public partial class Form1 : Form
     {
-        FileManager file;
         string fileName = "config.txt";
+        FileManager file;                   
+
 
         public Form1()
         {
             InitializeComponent();
             txt_output.ScrollBars = ScrollBars.Both;
             cb_WebServiceList.DropDownStyle = ComboBoxStyle.DropDownList;
-            file = new FileManager(fileName);
+            this.Load += new EventHandler(Form1_Load);
+        }
 
-            // List all the web services in the combobox
+
+        /*
+        *   METHOD        : Form1_Load
+        *   DESCRIPTION   : Contains the methods executed during the onLoad phase of the forms creation
+        *   PARAMETERS    : TODO
+        *   RETURNS       : void : Has no return value 
+        */
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+            //Read in the config file, and populate the combobox with the web services
+            file = new FileManager(fileName);
             foreach (var items in file.configList)
             {
                 cb_WebServiceList.Items.Add(items.Item1);
             }
 
-            /// DEBUGGING PURPOSES
+
+            #region DEBUGGING
             int i = 0;
             // Display all the information that is stored in the file.configList
             foreach (var items in file.configList)
@@ -45,12 +59,13 @@ namespace SOA_Assign02
                     items.Item2 + Environment.NewLine + Environment.NewLine +
                     items.Item3 + Environment.NewLine;
             }
-            /// END DEBUGGING PURPOSES
+            # endregion
+
 
             tb_param1.Enabled = false;
             tb_param2.Enabled = false;
-
         }
+
 
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
