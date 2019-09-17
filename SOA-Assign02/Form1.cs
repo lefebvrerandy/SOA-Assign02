@@ -29,23 +29,9 @@ namespace SOA_Assign02
             {
                 cb_WebServiceList.Items.Add(items.Item1);
             }
-
-            /// DEBUGGING PURPOSES
-            int i = 0;
+            
             // Display all the information that is stored in the file.configList
-            foreach (var items in file.configList)
-            {
-                txt_output.Text += string.Format("*******************************************" +
-                                   Environment.NewLine +
-                                   "            WEB SERVICE [{0}]" +
-                                    Environment.NewLine +
-                                   "*******************************************" +
-                                   Environment.NewLine, i++);
-                txt_output.Text += items.Item1 + Environment.NewLine + Environment.NewLine +
-                    items.Item2 + Environment.NewLine + Environment.NewLine +
-                    items.Item3 + Environment.NewLine;
-            }
-            /// END DEBUGGING PURPOSES
+            Print_Config_Into_Text_Box();
 
             tb_param1.Enabled = false;
             tb_param2.Enabled = false;
@@ -78,12 +64,12 @@ namespace SOA_Assign02
             //   URL, ACTION, REQUEST, RESPONSE
             string[] paramArray = { tb_param1.Text, tb_param2.Text };
             string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, paramArray);
-            List<string> response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
+            List<Tuple<string, string>> response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
 
             txt_output.Text = "";
-            foreach (string line in response)
+            foreach (var line in response)
             {
-                txt_output.Text += line + Environment.NewLine;
+                txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
             }
         }
 
@@ -102,6 +88,12 @@ namespace SOA_Assign02
             {
                 cb_WebServiceList.Items.Add(items.Item1);
             }
+            Print_Config_Into_Text_Box();
+
+        }
+
+        private void Print_Config_Into_Text_Box()
+        {
             int i = 0;
             foreach (var items in file.configList)
             {
