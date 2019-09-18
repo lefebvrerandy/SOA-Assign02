@@ -64,13 +64,10 @@ namespace SOA_Assign02
             //   URL, ACTION, REQUEST, RESPONSE
             string[] paramArray = { tb_param1.Text, tb_param2.Text };
             string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, paramArray);
-            List<Tuple<string, string>> response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
+            List<Tuple<string, string>> response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2], parseInformation[3]);
 
-            txt_output.Text = "";
-            foreach (var line in response)
-            {
-                txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
-            }
+            file.RemoveUselessElements(response);
+            PrintList(response);
         }
 
         private void btn_Clear_Click(object sender, EventArgs e)
@@ -95,6 +92,7 @@ namespace SOA_Assign02
         private void Print_Config_Into_Text_Box()
         {
             int i = 0;
+            txt_output.Text = "";
             foreach (var items in file.configList)
             {
                 txt_output.Text += string.Format("*******************************************" +
@@ -106,6 +104,15 @@ namespace SOA_Assign02
                 txt_output.Text += items.Item1 + Environment.NewLine + Environment.NewLine +
                     items.Item2 + Environment.NewLine + Environment.NewLine +
                     items.Item3 + Environment.NewLine;
+            }
+        }
+
+        private void PrintList(List<Tuple<string, string>> list)
+        {
+            txt_output.Text = "";
+            foreach (var line in list)
+            {
+                txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
             }
         }
     }

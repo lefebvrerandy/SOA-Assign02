@@ -122,29 +122,12 @@ namespace SOA_Assign02
             webServicePackage.Add(Tuple.Create<string, string, string>(name, request, response));
             configList = webServicePackage;
 
-            //DEBUG
-            //int i = 0;
-            //while (i < webServicePackage.Count)
-            //{
-            //    txt_output.Text = webServicePackage[i].Item1 + Environment.NewLine + Environment.NewLine +
-            //        webServicePackage[i].Item2 + Environment.NewLine + Environment.NewLine +
-            //        webServicePackage[i].Item3 + Environment.NewLine;
-            //    i++;
-            //}
-            //i = 0;
-            ////END DEBUG
-            //while (i < webServicePackage.Count)
-            //{
-            //    cb_WebServiceList.Items.Add(webServicePackage[i].Item1.ToString());
-            //    i++;
-            //}
-
             return webServicePackage;
         }
 
         public string[] ParseWebService(string selectedServiceMethod, List<Tuple<string,string,string>> webPackage, string[] paramArray)
         {
-            string[] parsedService = { "","","" };
+            string[] parsedService = { "","","", "" };
 
             // From the webPackage, I need:
             //  url= "http://www.dneonline.com/XXXX.asmx"
@@ -160,6 +143,7 @@ namespace SOA_Assign02
                     parsedService[0] = FindURL(items.Item2);
                     parsedService[1] = FindAction(items.Item2);
                     parsedService[2] = FindRequest(items.Item2, paramArray);
+                    parsedService[3] = FindResponse(items.Item3, paramArray);
                     break;
                 }
             }
@@ -264,6 +248,34 @@ namespace SOA_Assign02
             return request;
         }
 
+        private string FindResponse(string expectedResponse, string[] paramArray)
+        {
+            string response = string.Empty;
+            bool soapBody = false;
+            expectedResponse = Regex.Replace(expectedResponse, @"\t|\r", "");
+            string[] headerRequestByLine = expectedResponse.Split('\n');
+
+            for (int i = 0; i < headerRequestByLine.Count(); i++)
+            {
+                int o = headerRequestByLine.Count();
+                if (headerRequestByLine[i].Contains("<soap:Envelope"))
+                {
+                    soapBody = true;
+                }
+                else if (headerRequestByLine[i].Contains("</soap:Envelope>"))
+                {
+                    soapBody = false;
+                    response += headerRequestByLine[i];
+                }
+
+                if (soapBody)
+                {
+                    response += headerRequestByLine[i];
+                }
+            }
+            return response;
+        }
+
         public int DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
         {
             XmlDocument expectedResults = new XmlDocument();
@@ -300,11 +312,31 @@ namespace SOA_Assign02
             //  This is soap:Envelope/soap:Body/
             var resultNode = rootNode.FirstChild.FirstChild;
             int amountOfParamsNeeded = resultNode.ChildNodes.Count;
-            
-            
 
+
+            // Loop through the parameters to see the expected data types that are needed
+            string dataType = string.Empty;
+            foreach(XmlNode child in resultNode.ChildNodes)
+            {
+                dataType += child.InnerText + ",";
+            }
 
             return amountOfParamsNeeded;
+        }
+
+        // Clean up the list<tuple> thats holding our element names and their values.
+        // This will get rid of all the junk elements that are parents and have no value.
+        //  We dont want to show these
+        public void RemoveUselessElements(List<Tuple<string,string>> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if ((list[i].Item1.Count() > 1) && (list[i + 1].Item2.Count() < 1))
+                {
+                    list.RemoveAt(i);
+                    i--;
+                }
+            }
         }
     }
 }
