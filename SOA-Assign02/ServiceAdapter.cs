@@ -117,7 +117,7 @@ namespace SOA_Assign02
         *   DESCRIPTION   : Packages the soap envelope in to the web request object
         *   PARAMETERS    : XmlDocument soapEnvelopeXml : document containing the soap request details
         *                   HttpWebRequest webRequest : Web request object
-        *   RETURNS       : DEBUG : 
+        *   RETURNS       : void : Has no return
         */
         private static void InsertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
         {
@@ -127,6 +127,12 @@ namespace SOA_Assign02
             }
         }
 
+        /*
+        *   METHOD        : GetListOfElements
+        *   DESCRIPTION   : Converts the results from XML to a list of string pairs, and pulls out the values of the return message
+        *   PARAMETERS    : XmlDocument results : Web request results in XML       
+        *   RETURNS       : List<Tuple<string,string>> : Values pulled from the web servers response
+        */
         public static List<Tuple<string,string>> GetListOfElements(XmlDocument results)
         {
             List<Tuple<string, string>> elementsAndValue = new List<Tuple<string, string>>();
