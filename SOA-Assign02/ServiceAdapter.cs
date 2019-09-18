@@ -15,13 +15,22 @@ namespace SOA_Assign02
     {
 
 
-        // Retrieved from https://stackoverflow.com/questions/4791794/client-to-send-soap-request-and-receive-response
+        /*
+        *   METHOD        : InsertSoapEnvelopeIntoWebRequest
+        *   DESCRIPTION   : Calls the selected web service, and returns its response
+        *   PARAMETERS    : string url : Url of the service
+        *                   string action : Service to call at the web server
+        *                   string soapEnvelope : Complete soap request envelope
+        *   RETURNS       : List<Tuple<string, string>> : Contains the web servers response to our request
+        *   
+        *   Note: Taken from KBBWrite. (2011). Client to send SOAP request and receive response. Retrieved from https://stackoverflow.com/questions/4791794/client-to-send-soap-request-and-receive-response
+        */
         public static List<Tuple<string, string>> CallWebService(string url, string action, string soapEnvelope)
         {
             /// These are hardcoded values and will need to be changed
             //var _url = "http://www.dneonline.com/calculator.asmx";
-            var _url = url;
             //var _action = "http://tempuri.org/Add";
+            var _url = url;
             var _action = action;
 
             XmlDocument soapEnvelopeXml = CreateSoapEnvelope(soapEnvelope);
@@ -31,15 +40,14 @@ namespace SOA_Assign02
             // begin async call to web request.
             IAsyncResult asyncResult = webRequest.BeginGetResponse(null, null);
 
-            // suspend this thread until call is complete. You might want to
-            // do something usefull here like update your UI.
+            // suspend this thread until call is complete
             asyncResult.AsyncWaitHandle.WaitOne();
 
             // get the response from the completed web request.
             string soapResult = string.Empty;
             List<Tuple<string, string>> resultsList = new List<Tuple<string, string>>();
             bool unableToConnect = false;
-
+            
             try
             {
                 using (WebResponse webResponse = webRequest.EndGetResponse(asyncResult))
@@ -53,13 +61,13 @@ namespace SOA_Assign02
             }
             catch(Exception e)
             {
-                soapResult = e.Message.ToString();
+                soapResult = e.Message;
                 unableToConnect = true;
             }
 
             if (!unableToConnect)
             {
-                ///DEBUGGING
+                #region DEBUGGING
                 XmlDocument results = new XmlDocument();
                 results.LoadXml(soapResult);
                 //XmlNodeList nodes = expectedResults.ChildNodes;
@@ -74,7 +82,6 @@ namespace SOA_Assign02
                 bool lowestNodeBool = false;
                 var lowestNode = bodyNode;
                 var lowestNodeTest = bodyNode;
-                int answerNodeCount = 0;
                 List<XmlNode> listOfNodes = new List<XmlNode>();
                 while(!lowestNodeBool)
                 {
@@ -105,19 +112,24 @@ namespace SOA_Assign02
                 }
                 try
                 {
-                    Tuple<string, string> temp = Tuple.Create(lowestNode.Name.ToString(), lowestNode.Value.ToString());
-                    resultsList.Add(temp);
+                    resultsList.Add(Tuple.Create(lowestNode.Name.ToString(), lowestNode.Value.ToString()));
                 }
                 catch (Exception e)
                 { }
-
-                ///END DEBUGGING
+                #endregion DEBUGGING
             }
 
 
             return resultsList;
         }
 
+        /*
+        *   METHOD        : InsertSoapEnvelopeIntoWebRequest
+        *   DESCRIPTION   : Creates the HttpWebRequest object and adds the HTTP header, contentType, action, and url of the selected service
+        *   PARAMETERS    : string url : Url of the selected service
+        *                   string action : Requested soap action
+        *   RETURNS       : HttpWebRequest : Object containing connection details for the service
+        */
         private static HttpWebRequest CreateWebRequest(string url, string action)
         {
             // Header information
@@ -129,16 +141,30 @@ namespace SOA_Assign02
             return webRequest;
         }
 
+
+        /*
+        *   METHOD        : InsertSoapEnvelopeIntoWebRequest
+        *   DESCRIPTION   : Converts the soap request string, into an XML object
+        *   PARAMETERS    : string soapEnvelope : soap request in string form             
+        *   RETURNS       : XmlDocument : XML object of the soap string
+        */
         private static XmlDocument CreateSoapEnvelope(string soapEnvelope)
         {
             XmlDocument soapEnvelopeDocument = new XmlDocument();
-            /// White space may be an issue
             soapEnvelopeDocument.LoadXml(soapEnvelope);
 
             //soapEnvelopeDocument.LoadXml(@"<soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""><soap:Body ><Add xmlns = ""http://tempuri.org/""> <intA>1</intA><intB>2</intB></Add></soap:Body></soap:Envelope>");
             return soapEnvelopeDocument;
         }
 
+
+        /*
+        *   METHOD        : InsertSoapEnvelopeIntoWebRequest
+        *   DESCRIPTION   : Packages the soap envelope in to the web request object
+        *   PARAMETERS    : XmlDocument soapEnvelopeXml : document containing the soap request details
+        *                   HttpWebRequest webRequest : Web request object
+        *   RETURNS       : DEBUG : 
+        */
         private static void InsertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
         {
             using (Stream stream = webRequest.GetRequestStream())

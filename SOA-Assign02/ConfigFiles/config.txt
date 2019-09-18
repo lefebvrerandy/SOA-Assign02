@@ -1,0 +1,362 @@
+# Configuration file for stored web services
+# This configuration file must follow the format of:
+#	name =
+#	ADD THE NAME OF THE WEB SERVICE HERE
+#	request=
+#	ADD THE REQUEST INFORMATION HERE
+#	response=
+#	ADD THE RESPONSE INFORMATION HERE
+# Starting the line with a "#" counts it as a comment. Feel free to do so to make the configuration file 
+#  alot more read about. These lines will be ignored by the program.
+
+########################################
+#	Calculator -Add- Web Service
+########################################
+name=
+Calculator -Add-
+
+request=
+POST /calculator.asmx HTTP/1.1
+Host: www.dneonline.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://tempuri.org/Add"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Add xmlns="http://tempuri.org/">
+      <intA>int</intA>
+      <intB>int</intB>
+    </Add>
+  </soap:Body>
+</soap:Envelope>
+
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <AddResponse xmlns="http://tempuri.org/">
+      <AddResult>int</AddResult>
+    </AddResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	Calculator -Divide- Web Service
+########################################
+name=
+Calculator -Divide-
+
+
+#	Request information for
+request=
+POST /calculator.asmx HTTP/1.1
+Host: www.dneonline.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://tempuri.org/Divide"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Divide xmlns="http://tempuri.org/">
+      <intA>int</intA>
+      <intB>int</intB>
+    </Divide>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <DivideResponse xmlns="http://tempuri.org/">
+      <DivideResult>int</DivideResult>
+    </DivideResponse>
+  </soap:Body>
+</soap:Envelope>
+
+########################################
+#	Calculator -Multiply- Web Service
+########################################
+name=
+Calculator -Multiply-
+
+#	Request information for
+request=
+POST /calculator.asmx HTTP/1.1
+Host: www.dneonline.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://tempuri.org/Multiply"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Multiply xmlns="http://tempuri.org/">
+      <intA>int</intA>
+      <intB>int</intB>
+    </Multiply>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <MultiplyResponse xmlns="http://tempuri.org/">
+      <MultiplyResult>int</MultiplyResult>
+    </MultiplyResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	Calculator -Subtract- Web Service
+########################################
+name=
+Calculator -Subtract
+
+#	Request information for
+request=
+POST /calculator.asmx HTTP/1.1
+Host: www.dneonline.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://tempuri.org/Subtract"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Subtract xmlns="http://tempuri.org/">
+      <intA>int</intA>
+      <intB>int</intB>
+    </Subtract>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <SubtractResponse xmlns="http://tempuri.org/">
+      <SubtractResult>int</SubtractResult>
+    </SubtractResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	ResolveIP Web Service 
+########################################
+name=
+Resolve IP -ResolveIP-
+
+request=
+POST /ip2geo/ip2geo.asmx HTTP/1.1
+Host: ws.cdyne.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://ws.cdyne.com/ResolveIP"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ResolveIP xmlns="http://ws.cdyne.com/">
+      <ipAddress>string</ipAddress>
+      <licenseKey>string</licenseKey>
+    </ResolveIP>
+  </soap:Body>
+</soap:Envelope>
+
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ResolveIPResponse xmlns="http://ws.cdyne.com/">
+      <ResolveIPResult>
+        <City>string</City>
+        <StateProvince>string</StateProvince>
+        <Country>string</Country>
+        <Organization>string</Organization>
+        <Latitude>double</Latitude>
+        <Longitude>double</Longitude>
+        <AreaCode>string</AreaCode>
+        <TimeZone>string</TimeZone>
+        <HasDaylightSavings>boolean</HasDaylightSavings>
+        <Certainty>short</Certainty>
+        <RegionName>string</RegionName>
+        <CountryCode>string</CountryCode>
+      </ResolveIPResult>
+    </ResolveIPResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	Dictionary Web Service 
+########################################
+name=
+Dictionary Service -Define-
+
+
+#	Request information for Dictionary web service
+request=
+POST /DictService/DictService.asmx HTTP/1.1
+Host: services.aonaware.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://services.aonaware.com/webservices/Define"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Define xmlns="http://services.aonaware.com/webservices/">
+      <word>string</word>
+    </Define>
+  </soap:Body>
+</soap:Envelope>
+
+#	Response information for Dictionary web service
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <DefineResponse xmlns="http://services.aonaware.com/webservices/">
+      <DefineResult>
+        <Word>string</Word>
+        <Definitions>
+          <Definition>
+            <Word>string</Word>
+            <Dictionary xsi:nil="true" />
+            <WordDefinition>string</WordDefinition>
+          </Definition>
+          <Definition>
+            <Word>string</Word>
+            <Dictionary xsi:nil="true" />
+            <WordDefinition>string</WordDefinition>
+          </Definition>
+        </Definitions>
+      </DefineResult>
+    </DefineResponse>
+  </soap:Body>
+</soap:Envelope>
+
+@END FILE
+
+########################################
+#	
+########################################
+name=
+
+
+#	Request information for
+request=
+
+
+#	Response information for
+response=
+
+
+########################################
+#	
+########################################
+name=
+
+
+#	Request information for
+request=
+
+
+#	Response information for
+response=
+
+
+########################################
+#	
+########################################
+name=
+
+
+#	Request information for
+request=
+
+
+#	Response information for
+response=
+
+
+########################################
+#	
+########################################
+name=
+
+
+#	Request information for
+request=
+
+
+#	Response information for
+response=
+
+
+########################################
+#	
+########################################
+name=
+
+
+#	Request information for
+request=
+
+
+#	Response information for
+response=
+
+
+########################################
+#	
+########################################
+name=
+
+
+#	Request information for
+request=
+
+
+#	Response information for
+response=
+
+

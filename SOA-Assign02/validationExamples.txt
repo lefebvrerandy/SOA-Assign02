@@ -1,0 +1,19 @@
+# Calcualtor
+^(\d+);(\d+)$	#Add
+^(\d+);(\d+)$	#Divide
+^(\d+);(\d+)$	#Multiple
+^(\d+);(\d+)$	#Subtract
+
+#Resovel IP
+^(\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3});(0)$		#Resolve
+
+
+#Dictionary Service 
+^(\w+)$		#Define
+
+
+#
+
+
+
+

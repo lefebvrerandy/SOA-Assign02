@@ -1,105 +1,112 @@
-﻿using System;
+﻿/*
+*  FILE          : Form1.cs
+*  PROGRAMMER    : Randy Lefebvre 2256 and Bence Karner5307
+*  DESCRIPTION   : Contains the back end of the code required to run the form. It acts 
+*                  as a controller by interpreting the users input, and directing the programs execution.
+*/
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Configuration;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using EventLogger;
 
 namespace SOA_Assign02
 {
+
+    /*
+    *   NAME    :   Form1
+    *   PURPOSE :   Contains the back-end of the form. Here the chart is dynamically created, and the database queries are controlled. 
+    */
     public partial class Form1 : Form
     {
         FileManager file;
-        string fileName = "config.txt";
 
         public Form1()
         {
             InitializeComponent();
+            file = new FileManager();
+            this.Load += new EventHandler(Form1_Load);
+            cb_WebServiceList.SelectedIndexChanged += new EventHandler(cb_WebServiceList_SelectedIndexChanged);
+            tb_param1.GotFocus += new EventHandler(tb_param1_Enter);
+            tb_param1.LostFocus += new EventHandler(tb_param1_Leave);
             txt_output.ScrollBars = ScrollBars.Both;
             cb_WebServiceList.DropDownStyle = ComboBoxStyle.DropDownList;
-            tb_param1.Enabled = false;
-            tb_param2.Enabled = false;
-            this.Load += new EventHandler(Form1_Load);
+            tb_param1.Text = Constants.DEFAULT_PARAMETERS;
+            tb_param1.ForeColor = Color.Gray;
         }
 
 
         /*
         *   METHOD        : Form1_Load
         *   DESCRIPTION   : Contains the methods executed during the onLoad phase of the forms creation
-        *   PARAMETERS    : TODO
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
         *   RETURNS       : void : Has no return value 
         */
         private void Form1_Load(object sender, EventArgs e)
         {
-            
             //Read the config file, and populate the combobox with the web services
-            file = new FileManager(fileName);
-
-            // List all the web services in the combobox
             foreach (var items in file.configList)
             {
                 cb_WebServiceList.Items.Add(items.Item1);
             }
 
-            #region DEBUGGING
-            int i = 0;
-            // Display all the information that is stored in the file.configList
-            Print_Config_Into_Text_Box();
-
-            tb_param1.Enabled = false;
-            tb_param2.Enabled = false;
-
+            print_Config_Into_Text_Box();
         }
 
+
+
+        /*
+        *   METHOD        : cb_WebServiceList_SelectedIndexChanged
+        *   DESCRIPTION   : Checks if the user entered the correct number and type of parameters
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
+        *   RETURNS       : void : Has no return value 
+        */
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cb_WebServiceList.SelectedIndex != -1)
-            {
-                // Determine how many parameters we are expecting
-                switch (file.DetermineParamAmount(cb_WebServiceList.Text, file.configList))
-                {
-                    case 1:
-                        tb_param1.Enabled = true;
-                        tb_param2.Enabled = false;
-                        break;
-                    case 2:
-                        tb_param1.Enabled = true;
-                        tb_param2.Enabled = true;
-                        break;
-                }
-            }
+            // Determine how many parameters we are expecting
+            int numOfParams = file.DetermineParamAmount(cb_WebServiceList.Text, file.configList);
+            //string parameterTypes = 
+            txt_output.Text = "Parameters Required: " + numOfParams + Environment.NewLine + "Parameter Type: "; //DEBUG FIND WAY TO QUERY XML FILE FOR PARAM TYPES
         }
 
 
         /*
         *   METHOD        : paramValidations
         *   DESCRIPTION   : Checks if the user entered the correct number and type of parameters
-        *   PARAMETERS    : TODO
+        *   PARAMETERS    : void : Has no arguments
         *   RETURNS       : void : Has no return value 
         */
-        private bool paramValidation(string[] paranValues)
+        private bool paramValidation()
         {
-            // Determine how many parameters we are expecting
-            int numOfParams = file.DetermineParamAmount(cb_WebServiceList.Text, file.configList);
-            string parameters = tb_param1.Text;
+
+            //Ensure they selected a service
+            if (cb_WebServiceList.SelectedIndex == -1)
+            {
+                txt_output.Text = "Please select from the list of services...";
+                return false;
+            }
 
 
-            //DEBUG READ IN THE REGEX STRING FROM A FILE BASED ON THE SERVIVE REQUESTED BY THE USER
-            //Count the number of matches according to the regex pattern used
-            //Regex rx = new Regex(@"", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            //MatchCollection matches = rx.Matches(parameters);
-            //if(numOfParams != matches.Count)
-            //{
-            //    txt_output.Text = "ERROR: Please enter the correct amount and type of parameters";
-            //    return false;
-            //}
-
+            //Compare their input string to the regex pattern found in the validation file
+            try
+            {
+                string[] validationPatterns = file.ReadAllLines(Constants.VALIDATION_FILEPATH);
+                string regexPattern = validationPatterns.ElementAt(cb_WebServiceList.SelectedIndex);
+                RegexStringValidator stringValidator = new RegexStringValidator(@regexPattern);         //Light weight variant of regex class
+                stringValidator.Validate(tb_param1.Text);                                               //Throws exception if regex fails
+            }
+            catch (Exception error)
+            {
+                txt_output.Text += Environment.NewLine + "ERROR: Please enter the correct amount and type of parameters...";
+                Logger.RecordError(error.Message);
+                return false;
+            }
 
             return true; 
         }
@@ -108,51 +115,88 @@ namespace SOA_Assign02
         /*
         *   METHOD        : btn_Submit_Click
         *   DESCRIPTION   : Sends the users selected service, and parameters to the service provider
-        *   PARAMETERS    : TODO
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
         *   RETURNS       : void : Has no return value 
         */
         private void btn_Submit_Click(object sender, EventArgs e)
         {
+            //Ensure the users input matches the data type and number of expected arguments
+            if (!paramValidation()) { return; }
 
-            //Ensure the users input matches the data type required by the web service
-            string[] paramArray = { tb_param1.Text, tb_param2.Text };
-            if (paramValidation(paramArray))
-            {
 
-                // Make a call to parse the information from the selected web service method
-                //  The returned value will contain an array of strings giving the:
-                //   URL, ACTION, REQUEST, RESPONSE
-                string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, paramArray);
-                List<string> response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
+            /* 
+             * Make a call to parse the information from the selected web service method
+            *  The returned value will contain an array of strings giving the: URL, ACTION, REQUEST, RESPONSE
+            */
+            string[] paramArray = extractParameters();
+            string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, paramArray);
+            var response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
 
-                txt_output.Text = "";
-                foreach (string line in response)
-                {
-                    txt_output.Text += line + Environment.NewLine;
-                }
-            }
+
+            txt_output.Text = "";
+            //foreach (string line in response)
+            //{
+            //    txt_output.Text += line + Environment.NewLine;
+            //}
         }
 
+
+        /*
+        *   METHOD        : extractParameters
+        *   DESCRIPTION   : Parse the users input string for the real values
+        *   PARAMETERS    : void : Has no arguments
+        *   RETURNS       : string[] : Values of their input
+        */
+        private string[] extractParameters()
+        {
+
+            //Set the regex pattern from the validations file
+            string[] validationPatterns = file.ReadAllLines(Constants.VALIDATION_FILEPATH);
+            string regexPattern = validationPatterns.ElementAt(cb_WebServiceList.SelectedIndex);
+            Regex rx = new Regex(@regexPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+
+            //Count the number of matches according to the regex pattern
+            var match = rx.Match(tb_param1.Text);
+            List<string> parameterValues = new List<string> { };
+            for (int i = 1; i < match.Groups.Count; i++)
+            {
+                parameterValues.Add(match.Groups[i].ToString());
+            }
+
+            return parameterValues.ToArray();
+        }
+
+
+        /*
+        *   METHOD        : btn_Clear_Click
+        *   DESCRIPTION   : Clears the contents of all controls on the form
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
+        *   RETURNS       : void : Has no return value 
+        */
         private void btn_Clear_Click(object sender, EventArgs e)
         {
-            // Clear the contents of combobox selection, param 1, param 2, textbox
-
             cb_WebServiceList.SelectedIndex = -1;
-            tb_param1.Text = "";
-            tb_param1.Enabled = false;
-            tb_param2.Text = "";
-            tb_param2.Enabled = false;
+            tb_param1.Text = Constants.DEFAULT_PARAMETERS;
             txt_output.Text = "";
             cb_WebServiceList.Items.Clear();
             foreach (var items in file.configList)
             {
                 cb_WebServiceList.Items.Add(items.Item1);
             }
-            Print_Config_Into_Text_Box();
-
+            print_Config_Into_Text_Box();
         }
 
-        private void Print_Config_Into_Text_Box()
+
+        /*
+        *   METHOD        : print_Config_Into_Text_Box
+        *   DESCRIPTION   : Prints the contents of the config file to the main display
+        *   PARAMETERS    : void : Has no arguments
+        *   RETURNS       : void : Has no return value 
+        */
+        private void print_Config_Into_Text_Box()
         {
             int i = 0;
             foreach (var items in file.configList)
@@ -168,5 +212,44 @@ namespace SOA_Assign02
                     items.Item3 + Environment.NewLine;
             }
         }
+
+
+        /*
+        *   METHOD        : tb_param1_Enter
+        *   DESCRIPTION   : Sets the tooltip and placeholder text to clear when the txt box has focus
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
+        *   RETURNS       : void : Has no return value 
+        *   NOTE          : This method was taken from ExceptionLimeCat. (2012). Adding Placeholder Text To TextBox. From: https://stackoverflow.com/questions/11873378/adding-placeholder-text-to-textbox
+        */
+        private void tb_param1_Enter(object sender, EventArgs e)
+        {
+            tb_param1ToolTip.ToolTipTitle = "Instructions";
+            tb_param1ToolTip.Show("Example parameters: John Smith; Marry Citizen", tb_param1);
+            if (tb_param1.Text == Constants.DEFAULT_PARAMETERS)
+            {
+                tb_param1.Text = "";
+            }
+            tb_param1.ForeColor = Color.Black;
+        }
+
+
+        /*
+        *   METHOD        : tb_param1_Leave
+        *   DESCRIPTION   : Sets the placeholder text when the txt box loses focus
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
+        *   RETURNS       : void : Has no return value 
+        *   NOTE          : This method was taken from ExceptionLimeCat. (2012). Adding Placeholder Text To TextBox. From: https://stackoverflow.com/questions/11873378/adding-placeholder-text-to-textbox
+        */
+        private void tb_param1_Leave(object sender, EventArgs e)
+        {
+            if (tb_param1.Text == "")
+            {
+                tb_param1.Text = Constants.DEFAULT_PARAMETERS;
+                tb_param1.ForeColor = Color.Gray;
+            }
+        }
     }
 }
+

@@ -1,34 +1,98 @@
-﻿using System;
+﻿/*
+*  FILE          : FileManager.cs
+*  PROGRAMMER    : Randy Lefebvre 2256 and Bence Karner5307
+*  DESCRIPTION   : Contains the FileManager class, which provides the program with basic I/O functions like creating, and reading text. 
+*                  Also contains methods for creating, and interacting with xml documents
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using EventLogger;
 
 namespace SOA_Assign02
 {
+
+    /*  
+     *  NAME    : FileManager
+     *  PURPOSE : This class is used to provide IO support to the application. It contains methods for reading, 
+     *            writing, and interacting with text and xml files. 
+     */
     class FileManager
     {
-        // This class variable will be used to hold all the web services.
-        //  This class variable can be accessed by anyone to view and edit the web services
-        public List<Tuple<string, string, string>> configList;
+        public List<Tuple<string, string, string>> configList;  //Used to hold all the details of the web services
 
-        public FileManager(string fileName)
+
+        public FileManager()
         {
-            LoadConfigurationFile(fileName);
+            CreateValidationFile(Constants.VALIDATION_FILEPATH);
+            LoadConfigurationFile(Constants.CONFIG_FILEPATH);
         }
 
 
+        /*
+        *   METHOD        : CreateValidationFile
+        *   DESCRIPTION   : Checks if the validations file exists, if not, create one with defaults for the provided service
+        *   PARAMETERS    : string filename : file path to the file containing the validations
+        *   RETURNS       : bool : Returns true if the file exists, or was successfully created
+        */
+        internal bool CreateValidationFile(string filename)
+        {
+            //Check if the validation file exist
+            if (!File.Exists(filename))
+            {
+
+                //Validations not present, create a file with defaults
+                string[] defaultValidations = {
+                    @"^(\d+);(\d+)",
+                    @"^(\d+);(\d+)",
+                    @"^(\d+);(\d+)",
+                    @"^(\d+);(\d+)",
+                    @"^(\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3});(0)$",
+                    @"^(\w+)$",
+                    "",
+                    "" };
+                try
+                {
+                    File.WriteAllLines(Constants.VALIDATION_FILEPATH, defaultValidations);
+                }
+                catch (Exception error)
+                {
+                    Logger.RecordError(error.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        /*
+        *   METHOD        : ReadAllLines
+        *   DESCRIPTION   : Reads in all the lines from a file
+        *   PARAMETERS    : string filename : file path to the file containing the validations
+        *   RETURNS       : string[] : Returns all the lines read from the file
+        */
+        internal string[] ReadAllLines(string filepath)
+        {
+            return File.ReadAllLines(filepath); ;
+        }
+
+
+        /*
+        *   METHOD        : LoadConfigurationFile
+        *   DESCRIPTION   : Reads in the service details from the config file
+        *   PARAMETERS    : string filename : file path to the file containing the validations
+        *   RETURNS       : List<Tuple<string, string, string>> : Contains the service name, request , response for each service
+        */
         public List<Tuple<string, string, string>> LoadConfigurationFile(string fileName)
         {
             string name = "";
             string request = "";
             string response = "";
             List<Tuple<string, string, string>> webServicePackage = new List<Tuple<string, string, string>>();
-
 
             try
             {
@@ -112,7 +176,6 @@ namespace SOA_Assign02
                 return new List<Tuple<string, string, string>>();
             }
 
-
             // Store the values into the list<tuple>
             webServicePackage.Add(Tuple.Create<string, string, string>(name, request, response));
             configList = webServicePackage;
@@ -120,45 +183,48 @@ namespace SOA_Assign02
         }
 
 
-
         /*
         *   METHOD        : ParseWebService
-        *   DESCRIPTION   : 
-        *   PARAMETERS    : 
-        *   string selectedServiceMethod : Selected web service from the combo box
-        *   List<Tuple<string,string,string>> webPackage :  All the contents of the web service combo box
-        *   string[] paramArray : Values of both parameters
-        *   RETURNS       : string[] : TODO
+        *   DESCRIPTION   : Sets the url, action, and request corresponding to the service
+        *   PARAMETERS    : string selectedServiceMethod : Selected web service from the combo box
+        *                   List<Tuple<string,string,string>> webPackage :  All the contents of the web service combo box
+        *                   string[] paramArray : Arguments entered by the user into the form
+        *   RETURNS       : string[] : Contains the url[0], action[1], and request[2] of the web request
         */
         public string[] ParseWebService(string selectedServiceMethod, List<Tuple<string,string,string>> webPackage, string[] paramArray)
         {
             string[] parsedService = { "","","" };
 
-            // From the webPackage, I need:
-            //  url= "http://www.dneonline.com/XXXX.asmx"
-            //  action= "http://tempuri.org/XXX"
-            //  request= "<soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""><soap:Body ><Add xmlns = ""http://tempuri.org/""> <intA>1</intA><intB>2</intB></Add></soap:Body></soap:Envelope>"
-
+            /*
+             * From the webPackage, we need:
+             * url= "http://www.dneonline.com/XXXX.asmx"
+             * action= "http://tempuri.org/XXX"
+             * request= "<soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""><soap:Body ><Add xmlns = ""http://tempuri.org/""> <intA>1</intA><intB>2</intB></Add></soap:Body></soap:Envelope>"
+             */
             foreach (var items in webPackage)
             {
                 string WebPackageMethodName = items.Item1;
 
                 if (string.Compare(selectedServiceMethod, WebPackageMethodName) == 0)
                 {
-                    parsedService[0] = FindURL(items.Item2);
-                    parsedService[1] = FindAction(items.Item2);
-                    parsedService[2] = FindRequest(items.Item2, paramArray);
+                    parsedService[0] = FindURL(items.Item2);                            //Pull the host and service from the header request
+                    parsedService[1] = FindAction(items.Item2);                         //Pull the SOAPaction from the header request
+                    parsedService[2] = FindRequest(items.Item2, paramArray);            //Pull the xml request portion from the soap:envelope
                     break;
                 }
             }
-
-
             return parsedService;
         }
 
+
+        /*
+        *   METHOD        : FindURL
+        *   DESCRIPTION   : Finds the host address, and target service details from the complete headerRequest string
+        *   PARAMETERS    : string headerRequest : Contains the entire header for making the SOAP request
+        *   RETURNS       : string : Contains the Host and POST details of the selected service
+        */
         private string FindURL(string headerRequest)
         {
-            string url = string.Empty;
             string post = string.Empty;
             string host = string.Empty;
 
@@ -166,6 +232,7 @@ namespace SOA_Assign02
             string[] headerRequestByLine = headerRequest.Split('\n');
 
 
+            //Pull the host, and service information from the header request string
             int itemsFound = 0;
             foreach (string line in headerRequestByLine)
             {
@@ -188,15 +255,28 @@ namespace SOA_Assign02
                 }
             }
 
+            /* Example: 
+            * host = /DictService/DictService.asmx
+            * post = http://services.aonaware.com
+            */
             return host + post;
         }
 
+
+        /*
+        *   METHOD        : FindAction
+        *   DESCRIPTION   : Pulls the SOAP action string from the complete header request
+        *   PARAMETERS    : string headerRequest : Contains the entire header for making the SOAP request             
+        *   RETURNS       : string : Contains the SOAP action of the selected service
+        */
         private string FindAction(string headerRequest)
         {
             string action = string.Empty;
             headerRequest = Regex.Replace(headerRequest, @"\t|\r", "");
             string[] headerRequestByLine = headerRequest.Split('\n');
 
+
+            //Scan the header request argument, and look for the SOAP action sub string
             foreach (string line in headerRequestByLine)
             {
                 if (line.Contains("SOAPAction"))
@@ -206,9 +286,18 @@ namespace SOA_Assign02
                     break;
                 }
             }
+
+            //Example: SOAPAction: \"http://services.aonaware.com/webservices/Define\"
             return action;
         }
 
+
+        /*
+        *   METHOD        : FindRequest
+        *   DESCRIPTION   : Finds the XML details of the SOAP envelope
+        *   PARAMETERS    : string headerRequest : Contains the entire header for making the SOAP request           
+        *   RETURNS       : string : Contains the XML defining the SOAP request specifics
+        */
         private string FindRequest(string headerRequest, string[] paramArray)
         {
             string request = string.Empty;
@@ -216,6 +305,8 @@ namespace SOA_Assign02
             headerRequest = Regex.Replace(headerRequest, @"\t|\r", "");
             string[] headerRequestByLine = headerRequest.Split('\n');
 
+
+            //Find the inner contents of the soap envelope tags
             for(int i = 0; i < headerRequestByLine.Count() ; i++)
             {
                 int o = headerRequestByLine.Count();
@@ -248,10 +339,17 @@ namespace SOA_Assign02
                 child.InnerText = paramArray[j++];
             }
             request = convertedToXml.OuterXml;
-
             return request;
         }
 
+
+        /*
+        *   METHOD        : DetermineParamAmount
+        *   DESCRIPTION   : Used to count the number of parameters specified by the service
+        *   PARAMETERS    : string selectedServiceMethod: Users selected service
+        *                   List<Tuple<string, string, string>> webPackage : Details of the selected service
+        *   RETURNS       : string : Count of how many parameters are required by the service
+        */
         public int DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
         {
             XmlDocument expectedResults = new XmlDocument();
@@ -280,7 +378,7 @@ namespace SOA_Assign02
                     break;
                 }
             }
-            expectedString = Regex.Replace(expectedString, @"\t|\n|\r", ""); ;
+            expectedString = Regex.Replace(expectedString, @"\t|\n|\r", "");
             expectedResults.LoadXml(expectedString);
             XmlNodeList node = expectedResults.ChildNodes;
             var rootNode = node.Item(1);

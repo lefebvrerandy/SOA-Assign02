@@ -1,7 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿/*
+*  FILE          : Program.cs
+*  PROGRAMMER    : Randy Lefebvre 2256 and Bence Karner5307
+*  DESCRIPTION   : The program was created to provide users with a tool for selecting and interacting with web services. 
+*/
+
+using System;
 using System.Windows.Forms;
 
 namespace SOA_Assign02
