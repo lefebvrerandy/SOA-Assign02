@@ -199,6 +199,7 @@ namespace SOA_Assign02
         private void print_Config_Into_Text_Box()
         {
             int i = 0;
+            txt_output.Text = "";
             foreach (var items in file.configList)
             {
                 txt_output.Text += string.Format("*******************************************" +

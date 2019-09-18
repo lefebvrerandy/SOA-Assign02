@@ -8,6 +8,8 @@ using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Diagnostics;
+using System.Dynamic;
 
 namespace SOA_Assign02
 {
@@ -27,7 +29,6 @@ namespace SOA_Assign02
         */
         public static List<Tuple<string, string>> CallWebService(string url, string action, string soapEnvelope)
         {
-            /// These are hardcoded values and will need to be changed
             //var _url = "http://www.dneonline.com/calculator.asmx";
             //var _action = "http://tempuri.org/Add";
             var _url = url;
@@ -67,58 +68,11 @@ namespace SOA_Assign02
 
             if (!unableToConnect)
             {
-                #region DEBUGGING
                 XmlDocument results = new XmlDocument();
                 results.LoadXml(soapResult);
-                //XmlNodeList nodes = expectedResults.ChildNodes;
-                //XmlNodeList nodes = expectedResults.DocumentElement.SelectNodes(@"/soap:Envelope/soap:Body");
-                XmlNodeList node = results.ChildNodes;
-                // Start the node in body
-                var bodyNode = node.Item(1).FirstChild;
 
-
-
-                // Find the lowest node
-                bool lowestNodeBool = false;
-                var lowestNode = bodyNode;
-                var lowestNodeTest = bodyNode;
-                List<XmlNode> listOfNodes = new List<XmlNode>();
-                while(!lowestNodeBool)
-                {
-                    lowestNodeTest = lowestNodeTest.FirstChild;
-                    if (lowestNodeTest != null)
-                    {
-                        var testing = lowestNodeTest.ChildNodes;
-                        if (testing.Count > 1)
-                        {
-                            //Has multiple children. Need to iterate through them all
-                            foreach (XmlNode child in lowestNodeTest.ChildNodes)
-                            {
-                                //string textValueFromNode = child.InnerText.ToString();
-                                Tuple<string,string> temp = Tuple.Create(child.Name.ToString(), child.InnerText.ToString());
-                                resultsList.Add(temp);
-                            }
-                            break;
-                        }
-                        else
-                        {
-                            lowestNode = lowestNodeTest;
-                        }
-                    }
-                    else
-                    {
-                        lowestNodeBool = true;
-                    }
-                }
-                try
-                {
-                    resultsList.Add(Tuple.Create(lowestNode.Name.ToString(), lowestNode.Value.ToString()));
-                }
-                catch (Exception e)
-                { }
-                #endregion DEBUGGING
+                resultsList = GetListOfElements(results);
             }
-
 
             return resultsList;
         }
@@ -151,9 +105,9 @@ namespace SOA_Assign02
         private static XmlDocument CreateSoapEnvelope(string soapEnvelope)
         {
             XmlDocument soapEnvelopeDocument = new XmlDocument();
+
             soapEnvelopeDocument.LoadXml(soapEnvelope);
 
-            //soapEnvelopeDocument.LoadXml(@"<soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""><soap:Body ><Add xmlns = ""http://tempuri.org/""> <intA>1</intA><intB>2</intB></Add></soap:Body></soap:Envelope>");
             return soapEnvelopeDocument;
         }
 
@@ -171,6 +125,21 @@ namespace SOA_Assign02
             {
                 soapEnvelopeXml.Save(stream);
             }
+        }
+
+        public static List<Tuple<string,string>> GetListOfElements(XmlDocument results)
+        {
+            List<Tuple<string, string>> elementsAndValue = new List<Tuple<string, string>>();
+            XmlTextReader rdr = new XmlTextReader(new StringReader(results.OuterXml));
+            while (rdr.Read())
+            {
+                if ((rdr.NodeType == XmlNodeType.Element) || (rdr.HasValue))
+                {
+                    elementsAndValue.Add(Tuple.Create(rdr.LocalName, rdr.Value));
+                }
+            }
+
+            return elementsAndValue;
         }
     }
 }
