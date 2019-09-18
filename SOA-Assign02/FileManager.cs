@@ -24,11 +24,86 @@ namespace SOA_Assign02
 
         public List<Tuple<string, string, string>> LoadConfigurationFile(string fileName)
         {
+            string name = "";
+            string request = "";
+            string response = "";
+            List<Tuple<string, string, string>> webServicePackage = new List<Tuple<string, string, string>>();
 
-            // Check if configuration file exist
+
             try
             {
-                StreamReader file = new StreamReader(fileName);
+                // Open up the file and store the web services into the List<tuple>
+                using (StreamReader file = new StreamReader(fileName))
+                {
+                    string line = "";
+                    int section = 0;
+                    int holdSection = 0;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        // Determine which section we are currently reading
+
+                        if (line == "name=")
+                        {
+                            // This if statement checks if we've already stored an entry.
+                            //  If we have, store the currently obtained entry and retrieve the next
+                            if (section == 2)
+                            {
+                                webServicePackage.Add(Tuple.Create<string, string, string>(name, request, response));
+                                name = "";
+                                request = "";
+                                response = "";
+                            }
+                            section = 0;
+                            line = "";
+                        }
+                        else if (line == "request=")
+                        {
+                            section = 1;
+                            line = "";
+                        }
+                        else if (line == "response=")
+                        {
+                            section = 2;
+                            line = "";
+                        }
+                        else if (line.StartsWith("#"))
+                        {
+                            //This is a comment. Ignore the line but store the section for later
+                            holdSection = section;
+                            section = 3;
+                        }
+                        else if (line.StartsWith("@END FILE"))
+                        {
+                            break;
+                        }
+
+
+                        // Determine which section we are currently in, and store the value into the
+                        //  proper string
+                        if (section == 0)
+                        {
+                            name += line;
+                            if (line != "")
+                                name += "\r\n";
+                        }
+                        else if (section == 1)
+                        {
+                            request += line;
+                            if (line != "")
+                                request += "\r\n";
+                        }
+                        else if (section == 2)
+                        {
+                            response += line;
+                            if (line != "")
+                                response += "\r\n";
+                        }
+                        else if (section == 3)
+                        {
+                            section = holdSection;
+                        }
+                    }
+                }
             }
             catch (Exception error)
             {
@@ -38,96 +113,26 @@ namespace SOA_Assign02
             }
 
 
-            // Temp list<tuple> to hold our web services
-            List<Tuple<string, string, string>> webServicePackage = new List<Tuple<string, string, string>>();
-
-            string name = "";
-            string request = "";
-            string response = "";
-
-            // Open up the file and store the web services into the List<tuple>
-            using (StreamReader file = new StreamReader(fileName))
-            {
-                string line = "";
-                int section = 0;
-                int holdSection = 0;
-                while ((line = file.ReadLine()) != null)
-                {
-                    // Determine which section we are currently reading
-
-                    if (line == "name=")
-                    {
-                        // This if statement checks if we've already stored an entry.
-                        //  If we have, store the currently obtained entry and retrieve the next
-                        if (section == 2)
-                        {
-                            webServicePackage.Add(Tuple.Create<string, string, string>(name, request, response));
-                            name = "";
-                            request = "";
-                            response = "";
-                        }
-                        section = 0;
-                        line = "";
-                    }
-                    else if (line == "request=")
-                    {
-                        section = 1;
-                        line = "";
-                    }
-                    else if (line == "response=")
-                    {
-                        section = 2;
-                        line = "";
-                    }
-                    else if (line.StartsWith("#"))
-                    {
-                        //This is a comment. Ignore the line but store the section for later
-                        holdSection = section;
-                        section = 3;
-                    }
-                    else if (line.StartsWith("@END FILE"))
-                    {
-                        break;
-                    }
-
-
-                    // Determine which section we are currently in, and store the value into the
-                    //  proper string
-                    if (section == 0)
-                    {
-                        name += line;
-                        if (line != "")
-                            name += "\r\n";
-                    }
-                    else if (section == 1)
-                    {
-                        request += line;
-                        if (line != "")
-                            request += "\r\n";
-                    }
-                    else if (section == 2)
-                    {
-                        response += line;
-                        if (line != "")
-                            response += "\r\n";
-                    }
-                    else if (section == 3)
-                    {
-                        section = holdSection;
-                    }
-                }
-            }
-
             // Store the values into the list<tuple>
             webServicePackage.Add(Tuple.Create<string, string, string>(name, request, response));
             configList = webServicePackage;
-
             return webServicePackage;
         }
 
+
+
+        /*
+        *   METHOD        : ParseWebService
+        *   DESCRIPTION   : 
+        *   PARAMETERS    : 
+        *   string selectedServiceMethod : Selected web service from the combo box
+        *   List<Tuple<string,string,string>> webPackage :  All the contents of the web service combo box
+        *   string[] paramArray : Values of both parameters
+        *   RETURNS       : string[] : TODO
+        */
         public string[] ParseWebService(string selectedServiceMethod, List<Tuple<string,string,string>> webPackage, string[] paramArray)
         {
-            string[] parsedService = { "","","", "" };
+            string[] parsedService = { "","","" };
 
             // From the webPackage, I need:
             //  url= "http://www.dneonline.com/XXXX.asmx"
@@ -143,7 +148,6 @@ namespace SOA_Assign02
                     parsedService[0] = FindURL(items.Item2);
                     parsedService[1] = FindAction(items.Item2);
                     parsedService[2] = FindRequest(items.Item2, paramArray);
-                    parsedService[3] = FindResponse(items.Item3, paramArray);
                     break;
                 }
             }
@@ -248,34 +252,6 @@ namespace SOA_Assign02
             return request;
         }
 
-        private string FindResponse(string expectedResponse, string[] paramArray)
-        {
-            string response = string.Empty;
-            bool soapBody = false;
-            expectedResponse = Regex.Replace(expectedResponse, @"\t|\r", "");
-            string[] headerRequestByLine = expectedResponse.Split('\n');
-
-            for (int i = 0; i < headerRequestByLine.Count(); i++)
-            {
-                int o = headerRequestByLine.Count();
-                if (headerRequestByLine[i].Contains("<soap:Envelope"))
-                {
-                    soapBody = true;
-                }
-                else if (headerRequestByLine[i].Contains("</soap:Envelope>"))
-                {
-                    soapBody = false;
-                    response += headerRequestByLine[i];
-                }
-
-                if (soapBody)
-                {
-                    response += headerRequestByLine[i];
-                }
-            }
-            return response;
-        }
-
         public int DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
         {
             XmlDocument expectedResults = new XmlDocument();
@@ -314,29 +290,7 @@ namespace SOA_Assign02
             int amountOfParamsNeeded = resultNode.ChildNodes.Count;
 
 
-            // Loop through the parameters to see the expected data types that are needed
-            string dataType = string.Empty;
-            foreach(XmlNode child in resultNode.ChildNodes)
-            {
-                dataType += child.InnerText + ",";
-            }
-
             return amountOfParamsNeeded;
-        }
-
-        // Clean up the list<tuple> thats holding our element names and their values.
-        // This will get rid of all the junk elements that are parents and have no value.
-        //  We dont want to show these
-        public void RemoveUselessElements(List<Tuple<string,string>> list)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if ((list[i].Item1.Count() > 1) && (list[i + 1].Item2.Count() < 1))
-                {
-                    list.RemoveAt(i);
-                    i--;
-                }
-            }
         }
     }
 }
