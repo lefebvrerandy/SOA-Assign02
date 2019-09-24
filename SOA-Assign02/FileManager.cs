@@ -412,10 +412,17 @@ namespace SOA_Assign02
         {
             for (int i = 0; i < list.Count; i++)
             {
-                if ((list[i].Item1.Count() > 1) && (list[i + 1].Item2.Count() < 1))
+                try
+                {
+                    if ((list[i].Item1.Count() > 1) && (list[i + 1].Item2.Count() < 1))
+                    {
+                        list.RemoveAt(i);
+                        i--;
+                    }
+                }
+                catch
                 {
                     list.RemoveAt(i);
-                    i--;
                 }
             }
         }

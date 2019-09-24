@@ -169,13 +169,14 @@ Content-Length: length
   </soap:Body>
 </soap:Envelope>
 
-
 ########################################
-#	ResolveIP Web Service 
+#	IP2Geo -ResolveIP- Web Service
 ########################################
 name=
-Resolve IP -ResolveIP-
+IP2Geo -ResolveIP-
 
+
+#	Request information for
 request=
 POST /ip2geo/ip2geo.asmx HTTP/1.1
 Host: ws.cdyne.com
@@ -221,11 +222,186 @@ Content-Length: length
 </soap:Envelope>
 
 
+
 ########################################
-#	Dictionary Web Service 
+#	PhoneVerify -CheckPhoneNumber- Web Service
 ########################################
 name=
-Dictionary Service -Define-
+PhoneVerify -CheckPhoneNumber-
+
+
+#	Request information for
+request=
+POST /phoneverify/phoneverify.asmx HTTP/1.1
+Host: ws.cdyne.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://ws.cdyne.com/PhoneVerify/query/CheckPhoneNumber"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <CheckPhoneNumber xmlns="http://ws.cdyne.com/PhoneVerify/query">
+      <PhoneNumber>string</PhoneNumber>
+      <LicenseKey>string</LicenseKey>
+    </CheckPhoneNumber>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <CheckPhoneNumberResponse xmlns="http://ws.cdyne.com/PhoneVerify/query">
+      <CheckPhoneNumberResult>
+        <Company>string</Company>
+        <Valid>boolean</Valid>
+        <Use>string</Use>
+        <State>string</State>
+        <Switch>string</Switch>
+        <RC>string</RC>
+        <OCN>string</OCN>
+        <OriginalNumber>string</OriginalNumber>
+        <CleanNumber>string</CleanNumber>
+        <SwitchName>string</SwitchName>
+        <SwitchType>string</SwitchType>
+        <Country>string</Country>
+        <CLLI>string</CLLI>
+        <PrefixType>string</PrefixType>
+        <LATA>string</LATA>
+        <sms>string</sms>
+        <Email>string</Email>
+        <AssignDate>string</AssignDate>
+        <TelecomCity>string</TelecomCity>
+        <TelecomCounty>string</TelecomCounty>
+        <TelecomState>string</TelecomState>
+        <TelecomZip>string</TelecomZip>
+        <TimeZone>string</TimeZone>
+        <Lat>string</Lat>
+        <Long>string</Long>
+        <Wireless>boolean</Wireless>
+        <LRN>string</LRN>
+      </CheckPhoneNumberResult>
+    </CheckPhoneNumberResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	PhoneVerify -CheckPhoneNumbers- Web Service
+########################################
+name=
+PhoneVerify -CheckPhoneNumbers-
+
+
+#	Request information for
+request=
+POST /phoneverify/phoneverify.asmx HTTP/1.1
+Host: ws.cdyne.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://ws.cdyne.com/PhoneVerify/query/CheckPhoneNumbers"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <CheckPhoneNumbers xmlns="http://ws.cdyne.com/PhoneVerify/query">
+      <PhoneNumbers>
+        <string>string</string>
+        <string>string</string>
+      </PhoneNumbers>
+      <LicenseKey>string</LicenseKey>
+    </CheckPhoneNumbers>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <CheckPhoneNumbersResponse xmlns="http://ws.cdyne.com/PhoneVerify/query">
+      <CheckPhoneNumbersResult>
+        <PhoneReturn>
+          <Company>string</Company>
+          <Valid>boolean</Valid>
+          <Use>string</Use>
+          <State>string</State>
+          <Switch>string</Switch>
+          <RC>string</RC>
+          <OCN>string</OCN>
+          <OriginalNumber>string</OriginalNumber>
+          <CleanNumber>string</CleanNumber>
+          <SwitchName>string</SwitchName>
+          <SwitchType>string</SwitchType>
+          <Country>string</Country>
+          <CLLI>string</CLLI>
+          <PrefixType>string</PrefixType>
+          <LATA>string</LATA>
+          <sms>string</sms>
+          <Email>string</Email>
+          <AssignDate>string</AssignDate>
+          <TelecomCity>string</TelecomCity>
+          <TelecomCounty>string</TelecomCounty>
+          <TelecomState>string</TelecomState>
+          <TelecomZip>string</TelecomZip>
+          <TimeZone>string</TimeZone>
+          <Lat>string</Lat>
+          <Long>string</Long>
+          <Wireless>boolean</Wireless>
+          <LRN>string</LRN>
+        </PhoneReturn>
+        <PhoneReturn>
+          <Company>string</Company>
+          <Valid>boolean</Valid>
+          <Use>string</Use>
+          <State>string</State>
+          <Switch>string</Switch>
+          <RC>string</RC>
+          <OCN>string</OCN>
+          <OriginalNumber>string</OriginalNumber>
+          <CleanNumber>string</CleanNumber>
+          <SwitchName>string</SwitchName>
+          <SwitchType>string</SwitchType>
+          <Country>string</Country>
+          <CLLI>string</CLLI>
+          <PrefixType>string</PrefixType>
+          <LATA>string</LATA>
+          <sms>string</sms>
+          <Email>string</Email>
+          <AssignDate>string</AssignDate>
+          <TelecomCity>string</TelecomCity>
+          <TelecomCounty>string</TelecomCounty>
+          <TelecomState>string</TelecomState>
+          <TelecomZip>string</TelecomZip>
+          <TimeZone>string</TimeZone>
+          <Lat>string</Lat>
+          <Long>string</Long>
+          <Wireless>boolean</Wireless>
+          <LRN>string</LRN>
+        </PhoneReturn>
+      </CheckPhoneNumbersResult>
+    </CheckPhoneNumbersResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	Dictionary -Define- Web Service 
+########################################
+name=
+Dictionary -Define-
 
 
 #	Request information for Dictionary web service
@@ -274,89 +450,157 @@ Content-Length: length
   </soap:Body>
 </soap:Envelope>
 
+
+########################################
+#	Dictionary -DictionaryInfo- Web Service 
+########################################
+name=
+Dictionary -DictionaryInfo-
+
+
+#	Request information for
+request=
+POST /DictService/DictService.asmx HTTP/1.1
+Host: services.aonaware.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://services.aonaware.com/webservices/DictionaryInfo"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <DictionaryInfo xmlns="http://services.aonaware.com/webservices/">
+      <dictId>string</dictId>
+    </DictionaryInfo>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <DictionaryInfoResponse xmlns="http://services.aonaware.com/webservices/">
+      <DictionaryInfoResult>string</DictionaryInfoResult>
+    </DictionaryInfoResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	Dictionary -DefineInDict- Web Service 
+########################################
+name=
+Dictionary -DefineInDict-
+
+
+#	Request information for
+request=
+POST /DictService/DictService.asmx HTTP/1.1
+Host: services.aonaware.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://services.aonaware.com/webservices/DefineInDict"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <DefineInDict xmlns="http://services.aonaware.com/webservices/">
+      <dictId>string</dictId>
+      <word>string</word>
+    </DefineInDict>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <DefineInDictResponse xmlns="http://services.aonaware.com/webservices/">
+      <DefineInDictResult>
+        <Word>string</Word>
+        <Definitions>
+          <Definition>
+            <Word>string</Word>
+            <Dictionary xsi:nil="true" />
+            <WordDefinition>string</WordDefinition>
+          </Definition>
+          <Definition>
+            <Word>string</Word>
+            <Dictionary xsi:nil="true" />
+            <WordDefinition>string</WordDefinition>
+          </Definition>
+        </Definitions>
+      </DefineInDictResult>
+    </DefineInDictResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
+########################################
+#	Dictionary -Match- Web Service 
+########################################
+name=
+Dictionary -Match-
+
+
+#	Request information for
+request=
+POST /DictService/DictService.asmx HTTP/1.1
+Host: services.aonaware.com
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "http://services.aonaware.com/webservices/Match"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Match xmlns="http://services.aonaware.com/webservices/">
+      <word>string</word>
+      <strategy>string</strategy>
+    </Match>
+  </soap:Body>
+</soap:Envelope>
+
+
+#	Response information for
+response=
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <MatchResponse xmlns="http://services.aonaware.com/webservices/">
+      <MatchResult>
+        <DictionaryWord>
+          <DictionaryId>string</DictionaryId>
+          <Word>string</Word>
+        </DictionaryWord>
+        <DictionaryWord>
+          <DictionaryId>string</DictionaryId>
+          <Word>string</Word>
+        </DictionaryWord>
+      </MatchResult>
+    </MatchResponse>
+  </soap:Body>
+</soap:Envelope>
+
+
 @END FILE
 
-########################################
-#	
-########################################
-name=
 
-
-#	Request information for
-request=
-
-
-#	Response information for
-response=
-
-
-########################################
-#	
-########################################
-name=
-
-
-#	Request information for
-request=
-
-
-#	Response information for
-response=
-
-
-########################################
-#	
-########################################
-name=
-
-
-#	Request information for
-request=
-
-
-#	Response information for
-response=
-
-
-########################################
-#	
-########################################
-name=
-
-
-#	Request information for
-request=
-
-
-#	Response information for
-response=
-
-
-########################################
-#	
-########################################
-name=
-
-
-#	Request information for
-request=
-
-
-#	Response information for
-response=
-
-
-########################################
-#	
-########################################
-name=
-
-
-#	Request information for
-request=
-
-
-#	Response information for
-response=
 
 
