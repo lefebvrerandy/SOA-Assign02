@@ -150,8 +150,6 @@ namespace SOA_Assign02
         */
         private void btn_Submit_Click(object sender, EventArgs e)
         {
-            //Ensure the user has selected both a web service and method
-            if (cb_SelectedMethod.SelectedIndex < 1) { return; }
             //Ensure the users input matches the data type and number of expected arguments
             if (!paramValidation()) { return; }
 
