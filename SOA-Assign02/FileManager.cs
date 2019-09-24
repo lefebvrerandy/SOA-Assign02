@@ -350,7 +350,7 @@ namespace SOA_Assign02
         *                   List<Tuple<string, string, string>> webPackage : Details of the selected service
         *   RETURNS       : string : Count of how many parameters are required by the service
         */
-        public int DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
+        public Tuple<int,string> DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
         {
             XmlDocument expectedResults = new XmlDocument();
             string expectedString = string.Empty;
@@ -384,11 +384,40 @@ namespace SOA_Assign02
             var rootNode = node.Item(1);
 
             //  This is soap:Envelope/soap:Body/
-            var resultNode = rootNode.FirstChild.FirstChild;
+            XmlNode resultNode = rootNode.FirstChild.FirstChild;
             int amountOfParamsNeeded = resultNode.ChildNodes.Count;
 
+            int j = 0;
+            string dataTypeOfParameters = string.Empty;
+            foreach(XmlNode child in resultNode)
+            {
+                if (j >= 1)
+                {
+                    dataTypeOfParameters += ";";
+                }
+                dataTypeOfParameters += child.InnerText;
+                j++;
+            }
+            
 
-            return amountOfParamsNeeded;
+
+            return (Tuple.Create(amountOfParamsNeeded, dataTypeOfParameters));
+        }
+
+
+        // Clean up the list<tuple> thats holding our element names and their values.
+        // This will get rid of all the junk elements that are parents and have no value.
+        //  We dont want to show these
+        public void RemoveUselessElements(List<Tuple<string, string>> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if ((list[i].Item1.Count() > 1) && (list[i + 1].Item2.Count() < 1))
+                {
+                    list.RemoveAt(i);
+                    i--;
+                }
+            }
         }
     }
 }

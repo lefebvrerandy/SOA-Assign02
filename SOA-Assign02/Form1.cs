@@ -72,9 +72,9 @@ namespace SOA_Assign02
             if (cb_WebServiceList.SelectedIndex != -1)
             {
                 // Determine how many parameters we are expecting
-                int numOfParams = file.DetermineParamAmount(cb_WebServiceList.Text, file.configList);
+                Tuple<int,string> paramaterInformation = file.DetermineParamAmount(cb_WebServiceList.Text, file.configList);
                 //string parameterTypes = 
-                txt_output.Text = "Parameters Required: " + numOfParams + Environment.NewLine + "Parameter Type: "; //DEBUG FIND WAY TO QUERY XML FILE FOR PARAM TYPES
+                txt_output.Text = "Parameters Required: " + paramaterInformation.Item1 + Environment.NewLine + "Parameter Type: " + paramaterInformation.Item2; //DEBUG FIND WAY TO QUERY XML FILE FOR PARAM TYPES
             }
         }
 
@@ -138,10 +138,12 @@ namespace SOA_Assign02
 
 
             txt_output.Text = "";
-            foreach (Tuple<string,string> line in response)
-            {
-                txt_output.Text += line.Item1 + line.Item2 + Environment.NewLine;
-            }
+            file.RemoveUselessElements(response);
+            PrintList(response);
+            //foreach (Tuple<string,string> line in response)
+            //{
+            //    txt_output.Text += line.Item1 + line.Item2 + Environment.NewLine;
+            //}
         }
 
 
@@ -252,6 +254,15 @@ namespace SOA_Assign02
             {
                 tb_param1.Text = Constants.DEFAULT_PARAMETERS;
                 tb_param1.ForeColor = Color.Gray;
+            }
+        }
+
+        private void PrintList(List<Tuple<string, string>> list)
+        {
+            txt_output.Text = "";
+            foreach (var line in list)
+            {
+                txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
             }
         }
     }
