@@ -338,6 +338,7 @@ namespace SOA_Assign02
             {
                 child.InnerText = paramArray[j++];
             }
+
             request = convertedToXml.OuterXml;
             return request;
         }
