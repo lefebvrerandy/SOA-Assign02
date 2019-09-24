@@ -67,6 +67,7 @@ namespace SOA_Assign02
         */
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            print_Config_Into_Text_Box();
             cb_SelectedMethod.Items.Clear();
             // Populate the list for the methods
             List<string> methodList = new List<string>();
