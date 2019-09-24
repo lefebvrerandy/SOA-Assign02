@@ -127,7 +127,9 @@ namespace SOA_Assign02
             try
             {
                 string[] validationPatterns = file.ReadAllLines(Constants.VALIDATION_FILEPATH);
-                string regexPattern = validationPatterns.ElementAt(cb_WebServiceList.SelectedIndex);
+                int indexOfMethod = GetConfigIndex();
+
+                string regexPattern = validationPatterns.ElementAt(GetConfigIndex());
                 RegexStringValidator stringValidator = new RegexStringValidator(@regexPattern);         //Light weight variant of regex class
                 stringValidator.Validate(tb_param1.Text);                                               //Throws exception if regex fails
             }
@@ -139,6 +141,25 @@ namespace SOA_Assign02
             }
 
             return true; 
+        }
+
+
+        /*
+        *   METHOD        : GetConfigIndex
+        *   DESCRIPTION   : Gets the index of the selected method in the config list
+        *   PARAMETERS    : void : Has no arguments
+        *   RETURNS       : void : Has no return value 
+        */
+        private int GetConfigIndex()
+        {
+            for (int i = 0; i < file.configList.Count; i++)
+            {
+                if (file.configList[i].Item1.Contains(cb_SelectedMethod.Text))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
 
@@ -185,7 +206,7 @@ namespace SOA_Assign02
 
             //Set the regex pattern from the validations file
             string[] validationPatterns = file.ReadAllLines(Constants.VALIDATION_FILEPATH);
-            string regexPattern = validationPatterns.ElementAt(cb_WebServiceList.SelectedIndex);
+            string regexPattern = validationPatterns.ElementAt(GetConfigIndex());
             Regex rx = new Regex(@regexPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 
