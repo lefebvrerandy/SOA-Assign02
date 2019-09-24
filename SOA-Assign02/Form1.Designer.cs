@@ -38,12 +38,14 @@
             this.btn_Clear = new System.Windows.Forms.Button();
             this.paramLblToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tb_param1ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.cb_SelectedMethod = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cb_WebServiceList
             // 
             this.cb_WebServiceList.FormattingEnabled = true;
-            this.cb_WebServiceList.Location = new System.Drawing.Point(256, 42);
+            this.cb_WebServiceList.Location = new System.Drawing.Point(130, 38);
             this.cb_WebServiceList.Margin = new System.Windows.Forms.Padding(2);
             this.cb_WebServiceList.Name = "cb_WebServiceList";
             this.cb_WebServiceList.Size = new System.Drawing.Size(226, 21);
@@ -53,7 +55,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(256, 26);
+            this.label1.Location = new System.Drawing.Point(130, 22);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(193, 13);
@@ -121,11 +123,31 @@
             // 
             this.tb_param1ToolTip.ToolTipTitle = "Instructions";
             // 
+            // cb_SelectedMethod
+            // 
+            this.cb_SelectedMethod.FormattingEnabled = true;
+            this.cb_SelectedMethod.Location = new System.Drawing.Point(410, 38);
+            this.cb_SelectedMethod.Name = "cb_SelectedMethod";
+            this.cb_SelectedMethod.Size = new System.Drawing.Size(226, 21);
+            this.cb_SelectedMethod.TabIndex = 9;
+            this.cb_SelectedMethod.Text = "Select your method";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(407, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(171, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Select a method from the list below";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(746, 523);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cb_SelectedMethod);
             this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.btn_Submit);
             this.Controls.Add(this.label2);
@@ -152,6 +174,8 @@
         private System.Windows.Forms.Button btn_Clear;
         private System.Windows.Forms.ToolTip paramLblToolTip;
         private System.Windows.Forms.ToolTip tb_param1ToolTip;
+        private System.Windows.Forms.ComboBox cb_SelectedMethod;
+        private System.Windows.Forms.Label label3;
     }
 }
 

@@ -30,10 +30,12 @@ namespace SOA_Assign02
             InitializeComponent();
             file = new FileManager();
             this.Load += new EventHandler(Form1_Load);
+            cb_SelectedMethod.SelectedIndexChanged += new EventHandler(cb_SelectedMethod_SelectedIndexChanged);
             cb_WebServiceList.SelectedIndexChanged += new EventHandler(cb_WebServiceList_SelectedIndexChanged);
             tb_param1.GotFocus += new EventHandler(tb_param1_Enter);
             tb_param1.LostFocus += new EventHandler(tb_param1_Leave);
             txt_output.ScrollBars = ScrollBars.Both;
+            cb_SelectedMethod.DropDownStyle = ComboBoxStyle.DropDownList;
             cb_WebServiceList.DropDownStyle = ComboBoxStyle.DropDownList;
             tb_param1.Text = Constants.DEFAULT_PARAMETERS;
             tb_param1.ForeColor = Color.Gray;
@@ -49,31 +51,55 @@ namespace SOA_Assign02
         */
         private void Form1_Load(object sender, EventArgs e)
         {
-            //Read the config file, and populate the combobox with the web services
-            foreach (var items in file.configList)
-            {
-                cb_WebServiceList.Items.Add(items.Item1);
-            }
 
+            Populate_Web_Service_List();
             print_Config_Into_Text_Box();
         }
 
 
-
         /*
         *   METHOD        : cb_WebServiceList_SelectedIndexChanged
-        *   DESCRIPTION   : Checks if the user entered the correct number and type of parameters
+        *   DESCRIPTION   : This event is trigged if the user selects something from the web service combobox.
+        *                   We need to populate the method combobox given the web service that is selected.
         *   PARAMETERS    : object sender: object that triggered the event
         *                   EventArgs e  : captured data related to the event
         *   RETURNS       : void : Has no return value 
         */
         private void cb_WebServiceList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cb_WebServiceList.SelectedIndex != -1)
+            print_Config_Into_Text_Box();
+            cb_SelectedMethod.Items.Clear();
+            // Populate the list for the methods
+            List<string> methodList = new List<string>();
+
+            foreach (var items in file.configList)
+            {
+                methodList.Add(items.Item1);
+            }
+            foreach (var item in methodList)
+            {
+                if (item.StartsWith(cb_WebServiceList.Text))
+                {
+                    cb_SelectedMethod.Items.Add(item);
+                }
+            }
+        }
+
+
+        /*
+        *   METHOD        : cb_SelectedMethod_SelectedIndexChanged
+        *   DESCRIPTION   : This event is triggered when the user selects something from the method combobox.
+        *                   We will find out the information about the parameters that we are requiring, and give them instructions on what they can enter.
+        *   PARAMETERS    : object sender: object that triggered the event
+        *                   EventArgs e  : captured data related to the event
+        *   RETURNS       : void : Has no return value 
+        */
+        private void cb_SelectedMethod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cb_SelectedMethod.SelectedIndex != -1)
             {
                 // Determine how many parameters we are expecting
-                Tuple<int,string> paramaterInformation = file.DetermineParamAmount(cb_WebServiceList.Text, file.configList);
-                //string parameterTypes = 
+                Tuple<int, string> paramaterInformation = file.DetermineParamAmount(cb_SelectedMethod.Text, file.configList);
                 txt_output.Text = "Parameters Required: " + paramaterInformation.Item1 + Environment.NewLine + "Parameter Type: " + paramaterInformation.Item2; //DEBUG FIND WAY TO QUERY XML FILE FOR PARAM TYPES
             }
         }
@@ -124,6 +150,8 @@ namespace SOA_Assign02
         */
         private void btn_Submit_Click(object sender, EventArgs e)
         {
+            //Ensure the user has selected both a web service and method
+            if (cb_SelectedMethod.SelectedIndex < 1) { return; }
             //Ensure the users input matches the data type and number of expected arguments
             if (!paramValidation()) { return; }
 
@@ -133,7 +161,7 @@ namespace SOA_Assign02
             *  The returned value will contain an array of strings giving the: URL, ACTION, REQUEST, RESPONSE
             */
             string[] paramArray = extractParameters();
-            string[] parseInformation = file.ParseWebService(cb_WebServiceList.Text, file.configList, paramArray);
+            string[] parseInformation = file.ParseWebService(cb_SelectedMethod.Text, file.configList, paramArray);
             var response = ServiceAdapter.CallWebService(parseInformation[0], parseInformation[1], parseInformation[2]);
 
 
@@ -187,11 +215,41 @@ namespace SOA_Assign02
             tb_param1.Text = Constants.DEFAULT_PARAMETERS;
             txt_output.Text = "";
             cb_WebServiceList.Items.Clear();
+            cb_SelectedMethod.Items.Clear();
+            Populate_Web_Service_List();
+            print_Config_Into_Text_Box();
+        }
+
+
+        /*
+        *   METHOD        : Populate_Web_Service_List
+        *   DESCRIPTION   : X
+        *   PARAMETERS    : void : Has no parameters
+        *   RETURNS       : void : Has no return value 
+        */
+        private void Populate_Web_Service_List()
+        {
+            List<string> webServiceNames = new List<string>();
+            //Read the config file, and populate the combobox with the web services
             foreach (var items in file.configList)
             {
-                cb_WebServiceList.Items.Add(items.Item1);
+                string[] tempName = items.Item1.Split(' ');
+                webServiceNames.Add(tempName[0]);
             }
-            print_Config_Into_Text_Box();
+
+            for (int i = 0; (i + 1) < webServiceNames.Count; i++)
+            {
+                if (string.Equals(webServiceNames[i], webServiceNames[i + 1]))
+                {
+                    webServiceNames.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            foreach (var item in webServiceNames)
+            {
+                cb_WebServiceList.Items.Add(item);
+            }
         }
 
 
