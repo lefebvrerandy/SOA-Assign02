@@ -19,7 +19,7 @@ namespace SOA_Assign02
 
     /*
     *   NAME    :   Form1
-    *   PURPOSE :   Contains the back-end of the form. Here the chart is dynamically created, and the database queries are controlled. 
+    *   PURPOSE :   Contains the back-end of the form.
     */
     public partial class Form1 : Form
     {
@@ -188,10 +188,6 @@ namespace SOA_Assign02
             txt_output.Text = "";
             file.RemoveUselessElements(response);
             PrintList(response);
-            //foreach (Tuple<string,string> line in response)
-            //{
-            //    txt_output.Text += line.Item1 + line.Item2 + Environment.NewLine;
-            //}
         }
 
 
@@ -338,10 +334,15 @@ namespace SOA_Assign02
         private void PrintList(List<Tuple<string, string>> list)
         {
             txt_output.Text = "";
-            foreach (var line in list)
+            if (list.Count > 0)
             {
-                txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
+                foreach (var line in list)
+                {
+                    txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
+                }
             }
+            else
+                txt_output.Text = "Unable to retrieve a response from the web service. Double check you entered the parameters correctly.";
         }
     }
 }
