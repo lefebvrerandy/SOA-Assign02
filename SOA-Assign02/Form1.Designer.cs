@@ -91,7 +91,7 @@
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Parameters";
-            this.paramLblToolTip.SetToolTip(this.label2, "Seperate parameters using a semicolon\r\n");
+            this.paramLblToolTip.SetToolTip(this.label2, "Seperate parameters using a semicolon\r\n1 Parameter:  10\r\n2 parameters: 10;2\r\n");
             // 
             // btn_Submit
             // 
