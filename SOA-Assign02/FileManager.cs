@@ -350,7 +350,7 @@ namespace SOA_Assign02
         *                   List<Tuple<string, string, string>> webPackage : Details of the selected service
         *   RETURNS       : string : Count of how many parameters are required by the service
         */
-        public Tuple<int,string> DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
+        public Tuple<int,string, string> DetermineParamAmount(string selectedServiceMethod, List<Tuple<string, string, string>> webPackage)
         {
             XmlDocument expectedResults = new XmlDocument();
             string expectedString = string.Empty;
@@ -389,19 +389,22 @@ namespace SOA_Assign02
 
             int j = 0;
             string dataTypeOfParameters = string.Empty;
+            string elementName = string.Empty;
             foreach(XmlNode child in resultNode)
             {
                 if (j >= 1)
                 {
                     dataTypeOfParameters += ";";
+                    elementName += ";";
                 }
                 dataTypeOfParameters += child.InnerText;
+                elementName += child.Name;
                 j++;
             }
-            
+            string x = "s";
 
 
-            return (Tuple.Create(amountOfParamsNeeded, dataTypeOfParameters));
+            return (Tuple.Create(amountOfParamsNeeded, dataTypeOfParameters, elementName));
         }
 
 

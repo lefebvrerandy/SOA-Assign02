@@ -1,7 +1,7 @@
 # Configuration file for stored web services
 # This configuration file must follow the format of:
 #	name =
-#	ADD THE NAME OF THE WEB SERVICE HERE
+#	ADD THE NAME OF THE WEB SERVICE HERE (eg. WEBSERVIE -METHOD NAME-)
 #	request=
 #	ADD THE REQUEST INFORMATION HERE
 #	response=

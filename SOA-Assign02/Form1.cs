@@ -99,8 +99,9 @@ namespace SOA_Assign02
             if (cb_SelectedMethod.SelectedIndex != -1)
             {
                 // Determine how many parameters we are expecting
-                Tuple<int, string> paramaterInformation = file.DetermineParamAmount(cb_SelectedMethod.Text, file.configList);
-                txt_output.Text = "Parameters Required: " + paramaterInformation.Item1 + Environment.NewLine + "Parameter Type: " + paramaterInformation.Item2; //DEBUG FIND WAY TO QUERY XML FILE FOR PARAM TYPES
+                Tuple<int, string, string> paramaterInformation = file.DetermineParamAmount(cb_SelectedMethod.Text, file.configList);
+                txt_output.Text = "Parameters Required: " + paramaterInformation.Item1 + Environment.NewLine + "Parameter Type: " + paramaterInformation.Item2
+                    + Environment.NewLine + "Example Format: " + paramaterInformation.Item3;
             }
         }
 
