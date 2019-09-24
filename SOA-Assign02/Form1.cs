@@ -338,10 +338,15 @@ namespace SOA_Assign02
         private void PrintList(List<Tuple<string, string>> list)
         {
             txt_output.Text = "";
-            foreach (var line in list)
+            if (list.Count > 0)
             {
-                txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
+                foreach (var line in list)
+                {
+                    txt_output.Text += line.Item1 + "\t\t" + line.Item2 + Environment.NewLine;
+                }
             }
+            else
+                txt_output.Text = "Unable to retrieve a response from the web service. Double check you entered the parameters correctly.";
         }
     }
 }
