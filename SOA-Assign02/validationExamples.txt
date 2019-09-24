@@ -1,19 +1,21 @@
 # Calcualtor
-^(\d+);(\d+)$	#Add
-^(\d+);(\d+)$	#Divide
-^(\d+);(\d+)$	#Multiple
-^(\d+);(\d+)$	#Subtract
+^(\d+);(\d+)$					#Add
+^(\d+);(\d+)$					#Divide
+^(\d+);(\d+)$					#Multiple
+^(\d+);(\d+)$					#Subtract
+
 
 #Resovel IP
 ^(\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3});(0)$		#Resolve
 
 
+#PhoneVerify
+^(\d{10});(0)$					#CheckPhoneNumber
+^(\d{10});(0)$					#CheckPhoneNumbers
+
+
 #Dictionary Service 
-^(\w+)$		#Define
-
-
-#
-
-
-
-
+^(\w+)$						#Define
+^(\w+)$						#DictionaryInfo
+^(\w+);(\w+)$					#DefineInDict
+^(\w+);(\w+)$					#Match
