@@ -22,14 +22,22 @@ namespace SOA_Assign02
         //https://stackoverflow.com/questions/4418279/regex-remove-special-characters
         internal static string RemoveSpecialCharacters(string input)
         {
-            Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            return r.Replace(input, string.Empty);
+            //|(?<=['\"])s)
+            Regex regexResult = new Regex("(?:[^a-z0-9,.])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            return regexResult.Replace(input, string.Empty);
         }
 
         internal static string RemoveLetters(string input)
         {
-            Regex r = new Regex("", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            return r.Replace(input, string.Empty);
+            Regex regexResult = new Regex("(?:[^0-9,.])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            return regexResult.Replace(input, string.Empty);
+        }
+
+
+        internal static string FormatForMoney(string input)
+        {
+            Regex regexResult = new Regex("", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            return regexResult.Replace(input, string.Empty);
         }
 
     }//class

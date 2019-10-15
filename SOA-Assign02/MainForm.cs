@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 #pragma warning disable CS0105 
-using System.Linq;  //Required for aggregating controls during disposal
+using System.Linq;  //Required during control disposal
 #pragma warning restore CS0105
 using EventLogger;
 
@@ -54,6 +54,8 @@ namespace SOA_Assign02
             a03_ServiceLabel.Hide();
             a03_ServiceCmbBox.SelectedIndexChanged += new EventHandler(A03_ServiceCmbBox_IndexChanged);
             a03 = false;
+            hModeBtn.Location = new Point(0, 0);//DEBUG REMOVE BEFORE SUBMISSION AND MOVE THE BUTTON TO THE TOP LEFT
+            //DEBUG CHANGE WINDOW SIZE TO FIT 1080P screens
         }
 
 
@@ -629,15 +631,21 @@ namespace SOA_Assign02
             var principleString = a03_ParamPanel.Controls["principleTxtBox"].Text;
             try
             {
+
                 if (String.IsNullOrWhiteSpace(principleString))
                 {
                     //DEBUG SET LABEL TO THE RIGHT AS RED AND PRINT THE ERROR
                     throw new ArgumentNullException("principleString IsNullOrWhiteSpace");
                 }
 
-                var test = StringSanitizer.RemoveSpecialCharacters(principleString);
-                test = StringSanitizer.RemoveLetters(principleString);
-                //test = StringSanitizer.RemoveNonDigits(principleString);
+                var cleanedString = StringSanitizer.RemoveSpecialCharacters(principleString);
+                cleanedString = StringSanitizer.RemoveLetters(cleanedString);
+
+                //Find the locale of the 
+                if()
+                {
+
+                }
 
 
                 //No errors -> set return as valid

@@ -1,6 +1,6 @@
 ﻿/*
 *  FILE          : Constants.cs
-*  PROGRAMMER    : Bence Karner
+*  PROGRAMMER    : Randy Lefebvre 2256 and Bence Karner5307
 *  DESCRIPTION   : Contains a set of all constants used through the application.
 */
 
