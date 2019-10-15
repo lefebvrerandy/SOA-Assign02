@@ -1,8 +1,12 @@
-﻿using System;
+﻿/*
+*  FILE          : ServiceAdapter.cs
+*  PROGRAMMER    : Randy Lefebvre 2256 and Bence Karner5307
+*  DESCRIPTION   : Contains the ServiceAdapter class which allows the program to make HTTP request, 
+*                  and handle XML objects
+*/
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Net;
 using System.IO;
@@ -13,9 +17,13 @@ using System.Dynamic;
 
 namespace SOA_Assign02
 {
+    /*
+    *   NAME    :   ServiceAdapter
+    *   PURPOSE :   Used to make HTTP calls to a web service, create SOAP envelopes, 
+    *               and parse XML objects.
+    */
     public class ServiceAdapter
     {
-
 
         /*
         *   METHOD        : InsertSoapEnvelopeIntoWebRequest
@@ -77,6 +85,7 @@ namespace SOA_Assign02
             return resultsList;
         }
 
+
         /*
         *   METHOD        : InsertSoapEnvelopeIntoWebRequest
         *   DESCRIPTION   : Creates the HttpWebRequest object and adds the HTTP header, contentType, action, and url of the selected service
@@ -127,6 +136,7 @@ namespace SOA_Assign02
             }
         }
 
+
         /*
         *   METHOD        : GetListOfElements
         *   DESCRIPTION   : Converts the results from XML to a list of string pairs, and pulls out the values of the return message
@@ -147,5 +157,6 @@ namespace SOA_Assign02
 
             return elementsAndValue;
         }
-    }
-}
+
+    }//class
+}//namespace

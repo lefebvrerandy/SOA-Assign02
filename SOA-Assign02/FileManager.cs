@@ -404,7 +404,6 @@ namespace SOA_Assign02
             }
             string x = "s";
 
-
             return (Tuple.Create(amountOfParamsNeeded, dataTypeOfParameters, elementName));
         }
 
